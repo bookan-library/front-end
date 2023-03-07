@@ -1,0 +1,16 @@
+.menu {
+    gap: 1em;
+    padding: .5em;
+
+}
+
+.menuBtn {
+    color: gray;
+    padding: .5em;
+    border-radius: 10px;
+}
+
+.menuBtn:hover {
+    background-color: lightgray;
+    color: #000;
+}

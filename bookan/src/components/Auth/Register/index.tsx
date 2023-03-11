@@ -39,7 +39,7 @@ export const RegisterForm = ({ isOpen, onOpen, onClose }: Props) => {
             <ModalOverlay />
             <ModalContent className={styles.formWrapper}>
                 <ModalCloseButton />
-                <Text fontSize="2xl" marginBottom={'20px'}>Register!</Text>
+                <Text fontSize="2xl" marginBottom={'20px'}>Registrujte se!</Text>
                 <FormControl className={styles.form}>
                     <Input type='text' width={'75%'} placeholder='First name' {...register("firstName", { required: true })} />
                     <Input type='text' width={'75%'} placeholder='Last name' {...register("lastName", { required: true })} />
@@ -57,7 +57,7 @@ export const RegisterForm = ({ isOpen, onOpen, onClose }: Props) => {
                     <Input type='password' width={'75%'} placeholder='Password' {...register("password", { required: true })} />
                     <Input type='password' width={'75%'} placeholder='Confirm password' {...register("confirmPassword", { required: true })} />
                 </FormControl>
-                <Button width={'70%'} backgroundColor={'#000'} color='#fff' marginTop={'20px'} _hover={{ backgroundColor: '#ff6600' }} onClick={handleSubmit(onSubmit)}>Register</Button>
+                <Button width={'70%'} backgroundColor={'#000'} color='#fff' marginTop={'20px'} _hover={{ backgroundColor: '#ff6600' }} onClick={handleSubmit(onSubmit)}>Registruj se</Button>
             </ModalContent>
         </Modal >
 

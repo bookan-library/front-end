@@ -1,6 +1,6 @@
-import { Address } from "cluster"
+import { Address } from "./Address"
 
-export interface Buyer {
+export interface User {
     id: number
     firstName: string
     lastName: string

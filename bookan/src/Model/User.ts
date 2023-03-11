@@ -8,4 +8,5 @@ export interface User {
     phoneNumber: string
     address: Address
     emailConfirmed: boolean
+    role: number
 }

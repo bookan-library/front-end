@@ -1,6 +1,5 @@
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import { Box, Flex, Icon, Link, Popover, PopoverContent, PopoverTrigger, Stack, Text, useColorModeValue } from '@chakra-ui/react';
-import React from 'react'
 
 export interface NavItem {
     label: string;
@@ -8,7 +7,6 @@ export interface NavItem {
     children?: Array<NavItem>;
     href?: string;
 }
-
 
 export const DesktopSubNav = ({ label, href, subLabel, children }: NavItem) => {
     return (

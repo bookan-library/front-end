@@ -14,8 +14,17 @@ export const AuthMenu = () => {
     const navigate = useNavigate()
 
     return (
-        <>
-            <Flex className={styles.authWrapper}>
+        <Flex width={'100%'}>
+            <Flex css={
+                {
+                    justifyContent: 'flex-end',
+                    backgroundColor: '#000',
+                    padding: '.5em 1em',
+                    gap: '20px'
+                }
+            }
+                width={'100%'}
+            >
                 {
                     token !== null ?
                         <Link color='white' onClick={() => {
@@ -39,7 +48,7 @@ export const AuthMenu = () => {
             </Flex>
             <RegisterForm isOpen={isOpenRegister} onOpen={onOpenRegister} onClose={onCloseRegister}></RegisterForm>
             <LoginForm isOpen={isOpenLogin} onOpen={onOpenLogin} onClose={onCloseLogin}></LoginForm>
-        </>
+        </Flex >
 
     )
 }

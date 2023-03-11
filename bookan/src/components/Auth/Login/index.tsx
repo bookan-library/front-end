@@ -17,14 +17,13 @@ type Inputs = {
 export const LoginForm = ({ isOpen, onOpen, onClose }: Props) => {
 
     const login = useApplicationStore(state => state.login)
-    const tokenResponse = useApplicationStore(state => state.tokenResponse)
+    const token = useApplicationStore(state => state.token)
     const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
     const onSubmit: SubmitHandler<Inputs> = data => {
         login(data as unknown as LoginCredentials);
-        if (tokenResponse === null) {
+        if (token === null) {
             onClose()
         }
-
     }
 
     return (

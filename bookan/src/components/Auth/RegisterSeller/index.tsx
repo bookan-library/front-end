@@ -1,10 +1,8 @@
-import { background, Button, Center, Flex, FormControl, FormHelperText, FormLabel, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Text } from '@chakra-ui/react'
+import { Button, Flex, FormControl, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Text } from '@chakra-ui/react'
 import React from 'react'
-import styles from './index.module.css'
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useApplicationStore } from '../../../stores/store';
-import { RegisterBuyer } from '../../../types/RegisterBuyer';
-
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { useApplicationStore } from '../../../stores/store'
+import { RegisterSeller } from '../../../types/RegisterSeller'
 
 interface Props {
     isOpen: boolean
@@ -26,26 +24,42 @@ type Inputs = {
     confirmPassword: string
 }
 
-export const RegisterForm = ({ isOpen, onOpen, onClose }: Props) => {
+export const RegisterSellerForm = ({ isOpen, onOpen, onClose }: Props) => {
 
-    const registerBuyer = useApplicationStore(state => state.registerBuyer)
-    const registerBuyerDetails = useApplicationStore(state => state.registerBuyerDetails)
+
+    const registerSeller = useApplicationStore(state => state.registerSeller)
+    const registerSellerDetails = useApplicationStore(state => state.registerSellerDetails)
     const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
     const onSubmit: SubmitHandler<Inputs> = data => {
-        registerBuyer(data as unknown as RegisterBuyer);
-        if (registerBuyerDetails.error === null)
+        registerSeller(data as unknown as RegisterSeller);
+        if (registerSellerDetails.error === null)
             onClose()
     }
-
-
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent className={styles.formWrapper}>
+            <ModalContent css={
+                {
+                    position: 'absolute',
+                    backgroundColor: '#fff',
+                    boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+                    width: '500px',
+                    padding: '2em',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }
+            }>
                 <ModalCloseButton />
-                <Text fontSize="2xl" marginBottom={'20px'}>Registrujte se!</Text>
-                <FormControl className={styles.form}>
+                <Text fontSize="2xl" marginBottom={'20px'}>Registrujte prodavca!</Text>
+                <FormControl css={
+                    {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '20px'
+                    }
+                }>
                     <Input type='text' width={'75%'} placeholder='First name' {...register("firstName", { required: true })} />
                     <Input type='text' width={'75%'} placeholder='Last name' {...register("lastName", { required: true })} />
                     <Input type='text' width={'75%'} placeholder='Email' {...register("email", { required: true })} />
@@ -62,7 +76,7 @@ export const RegisterForm = ({ isOpen, onOpen, onClose }: Props) => {
                     <Input type='password' width={'75%'} placeholder='Password' {...register("password", { required: true })} />
                     <Input type='password' width={'75%'} placeholder='Confirm password' {...register("confirmPassword", { required: true })} />
                 </FormControl>
-                <Button width={'70%'} backgroundColor={'#000'} color='#fff' marginTop={'20px'} _hover={{ backgroundColor: '#ff6600' }} onClick={handleSubmit(onSubmit)}>Registruj se</Button>
+                <Button width={'70%'} backgroundColor={'#000'} color='#fff' marginTop={'20px'} _hover={{ backgroundColor: '#ff6600' }} onClick={handleSubmit(onSubmit)}>Registruj prodavca</Button>
             </ModalContent>
         </Modal >
     )

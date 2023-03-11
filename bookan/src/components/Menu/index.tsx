@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './index.module.css'
 import {
     Menu,
@@ -22,16 +22,28 @@ import {
 import { link } from 'fs'
 import { DesktopNav } from './DesktopNav'
 import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
+import { useApplicationStore } from '../../stores/store'
 
 export const NavMenu = () => {
 
+    const getLoggedUser = useApplicationStore(state => state.getLoggedUser)
+    const loggedUser = useApplicationStore(state => state.loggedUser)
+    const token = useApplicationStore(state => state.token)
+
+    useEffect(() => {
+        if (token !== null)
+            getLoggedUser()
+        console.log('logged', loggedUser)
+    }, [token])
+
     const { isOpen, onToggle } = useDisclosure();
     return (
-        <Box>
+        <Flex>
             <Flex
                 bg={useColorModeValue('white', 'gray.800')}
                 color={useColorModeValue('gray.600', 'white')}
                 minH={'60px'}
+                width={'100%'}
                 py={{ base: 2 }}
                 px={{ base: 4 }}
                 borderBottom={1}
@@ -51,14 +63,14 @@ export const NavMenu = () => {
                         aria-label={'Toggle Navigation'}
                     />
                 </Flex>
-                <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-                    <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
-                        <DesktopNav />
+                <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }} w={'100%'}>
+                    <Flex display={{ base: 'none', md: 'flex' }} ml={10} w={'100%'}>
+                        <DesktopNav loggedUser={loggedUser.data[0]} />
                     </Flex>
                 </Flex>
 
             </Flex>
-        </Box>
+        </Flex>
 
     )
 }

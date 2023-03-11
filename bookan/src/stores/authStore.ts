@@ -6,6 +6,7 @@ import { ApiResponse, ResponseStatus } from './types'
 import produce from "immer"
 import axios from 'axios'
 import env from "react-dotenv";
+import { RegisterSeller } from '../types/RegisterSeller'
 
 
 export type AuthStore = AuthStoreState & AuthStoreActions
@@ -20,6 +21,8 @@ export type AuthStoreActions = {
     loggedUser: ApiResponse
     registerBuyerDetails: ApiResponse
     tokenResponse: ApiResponse
+    registerSeller: (seller: RegisterSeller) => void
+    registerSellerDetails: ApiResponse
 }
 
 export type AuthStoreState = {
@@ -132,6 +135,11 @@ export const authStoreSlice: StateCreator<AuthStore> = (set, get) => ({
         set(
             produce((state: AuthStore) => {
                 state.token = null
+                state.loggedUser = {
+                    data: {},
+                    error: null,
+                    status: ResponseStatus.Loading,
+                }
                 return state
             })
         )
@@ -180,13 +188,6 @@ export const authStoreSlice: StateCreator<AuthStore> = (set, get) => ({
         status: ResponseStatus.Loading,
     },
     verifyUser: async (id: string | null, code: string | null) => {
-        console.log(env.REACT_APP_URL)
-        // set(
-        //     produce((state: AuthStore) => {
-        //         state.loggedUser.status = ResponseStatus.Loading;
-        //         return state
-        //     })
-        // )
         try {
             const res = await axios.get(`${process.env.REACT_APP_URL}/auth/verify?id=${id}&code=${code}`,
                 {
@@ -210,6 +211,60 @@ export const authStoreSlice: StateCreator<AuthStore> = (set, get) => ({
                 })
             )
         }
-    }
+    },
+    registerSellerDetails: {
+        data: [],
+        error: null,
+        status: ResponseStatus.Loading,
+    },
+    registerSeller: async (seller: RegisterSeller) => {
+        set(
+            produce((state: AuthStore) => {
+                state.registerSellerDetails.status = ResponseStatus.Loading;
+                return state
+            })
+        )
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_URL}/auth/register/seller`,
+                {
+                    FirstName: seller.firstName,
+                    LastName: seller.lastName,
+                    Email: seller.email,
+                    PhoneNumber: seller.email,
+                    Address: {
+                        Country: seller.country,
+                        City: seller.city,
+                        Street: seller.street,
+                        PostalCode: seller.postalCode,
+                        StreetNumber: seller.number
+                    },
+                    Password: seller.password,
+                    ConfirmPassword: seller.confirmPassword
+                },
+
+
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + get().token
+                    }
+                })
+            set(
+                produce((state: AuthStore) => {
+                    state.registerSellerDetails.data = [res.data]
+                    state.registerSellerDetails.status = ResponseStatus.Success
+                    return state
+                })
+            )
+        } catch (err) {
+            console.log(err)
+            set(
+                produce((state: AuthStore) => {
+                    state.registerSellerDetails.status = ResponseStatus.Error
+                    return state
+                })
+            )
+        }
+    },
 })
 

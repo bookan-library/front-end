@@ -14,7 +14,12 @@ export type AuthStoreActions = {
     login: (LoginCredentials: LoginCredentials) => void
     logout: () => void
     registerBuyer: (buyer: RegisterBuyer) => void
+    getLoggedUser: () => void
+    verifyUser: (id: string | null, code: string | null) => void
+    verifiedUser: ApiResponse
+    loggedUser: ApiResponse
     registerBuyerDetails: ApiResponse
+    tokenResponse: ApiResponse
 }
 
 export type AuthStoreState = {
@@ -29,13 +34,47 @@ const state: AuthStoreState = {
 
 export const authStoreSlice: StateCreator<AuthStore> = (set, get) => ({
     ...state,
-    login: async (LoginCredentials: LoginCredentials) => {
-        // // const token = await authService.login(dto)
-        // // const user = await authService.getMe(token)
-        // set((state) => ({
-        //     token,
-        //     user,
-        // }))
+    tokenResponse: {
+        data: [],
+        error: null,
+        status: ResponseStatus.Loading,
+    },
+    login: async (loginCredentials: LoginCredentials) => {
+        set(
+            produce((state: AuthStore) => {
+                state.tokenResponse.status = ResponseStatus.Loading;
+                return state
+            })
+        )
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_URL}/auth/login`,
+                {
+                    email: loginCredentials.email,
+                    password: loginCredentials.password
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+
+            set(
+                produce((state: AuthStore) => {
+                    state.tokenResponse.data = [res.data.token]
+                    state.token = res.data.token
+                    state.tokenResponse.status = ResponseStatus.Success
+                    return state
+                })
+            )
+        } catch (err) {
+            console.log(err)
+            set(
+                produce((state: AuthStore) => {
+                    state.tokenResponse.status = ResponseStatus.Error
+                    return state
+                })
+            )
+        }
     },
     registerBuyerDetails: {
         data: [],
@@ -90,10 +129,87 @@ export const authStoreSlice: StateCreator<AuthStore> = (set, get) => ({
         }
     },
     logout: () => {
-        set((state) => ({
-            token: null,
-            user: null,
-        }))
+        set(
+            produce((state: AuthStore) => {
+                state.token = null
+                return state
+            })
+        )
     },
+    loggedUser: {
+        data: {},
+        error: null,
+        status: ResponseStatus.Loading,
+    },
+    getLoggedUser: async () => {
+        console.log(env.REACT_APP_URL)
+        set(
+            produce((state: AuthStore) => {
+                state.loggedUser.status = ResponseStatus.Loading;
+                return state
+            })
+        )
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_URL}/auth/user`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + get().token
+                    }
+                })
+            set(
+                produce((state: AuthStore) => {
+                    state.loggedUser.data = [res.data]
+                    state.loggedUser.status = ResponseStatus.Success
+                    return state
+                })
+            )
+        } catch (err) {
+            console.log(err)
+            set(
+                produce((state: AuthStore) => {
+                    state.loggedUser.status = ResponseStatus.Error
+                    return state
+                })
+            )
+        }
+    },
+    verifiedUser: {
+        data: {},
+        error: null,
+        status: ResponseStatus.Loading,
+    },
+    verifyUser: async (id: string | null, code: string | null) => {
+        console.log(env.REACT_APP_URL)
+        // set(
+        //     produce((state: AuthStore) => {
+        //         state.loggedUser.status = ResponseStatus.Loading;
+        //         return state
+        //     })
+        // )
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_URL}/auth/verify?id=${id}&code=${code}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+            set(
+                produce((state: AuthStore) => {
+                    state.verifiedUser.data = [res.data]
+                    state.verifiedUser.status = ResponseStatus.Success
+                    return state
+                })
+            )
+        } catch (err) {
+            console.log(err)
+            set(
+                produce((state: AuthStore) => {
+                    state.verifiedUser.status = ResponseStatus.Error
+                    return state
+                })
+            )
+        }
+    }
 })
 

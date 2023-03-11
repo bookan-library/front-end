@@ -11,11 +11,11 @@ export const useApplicationStore = create<AuthStore>()(
             // ...fileStoreSlice(...a),
         })),
         {
-            // partialize: ({ token, user, boxType }) => ({
-            //     token,
-            //     user,
-            //     boxType,
-            // }),
+            //     // partialize: ({ token, user, boxType }) => ({
+            //     //     token,
+            //     //     user,
+            //     //     boxType,
+            //     // }),
             name: 'application-store',
         }
     )

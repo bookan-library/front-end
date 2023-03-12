@@ -1,10 +1,12 @@
-import { Button, Flex, FormControl, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Select, Text } from '@chakra-ui/react'
+import { Button, Flex, FormControl, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Select, Text, useDisclosure } from '@chakra-ui/react'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useApplicationStore } from '../../../stores/store';
 import { IoMdPersonAdd } from 'react-icons/io'
 import { MdLibraryAdd } from 'react-icons/md'
 import { AddBook } from '../../../types/AddBook';
+import { AddAuthorForm } from '../AddAuthorForm';
+import { AddPublisherForm } from '../AddPublisherForm';
 
 interface Props {
     isOpen: boolean
@@ -51,6 +53,9 @@ export const AddBookForm = ({ isOpen, onOpen, onClose }: Props) => {
             onClose()
     }
     const [selectedFile, setSelectedFile] = useState<File>();
+    const { isOpen: isOpenPublisher, onOpen: onOpenPublisher, onClose: onClosePublisher } = useDisclosure();
+    const { isOpen: isOpenAuthor, onOpen: onOpenAuthor, onClose: onCloseAuthor } = useDisclosure();
+
 
     useEffect(() => {
         getAuthors()
@@ -65,73 +70,78 @@ export const AddBookForm = ({ isOpen, onOpen, onClose }: Props) => {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent css={
-                {
-                    position: 'absolute',
-                    backgroundColor: '#fff',
-                    boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
-                    width: '500px',
-                    padding: '2em',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                }
-            }>
-                <ModalCloseButton />
-                <Text fontSize="2xl" marginBottom={'20px'}>Dodajte novu knjigu!</Text>
-                <FormControl css={
+        <>
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent css={
                     {
-                        display: 'flex',
+                        position: 'absolute',
+                        backgroundColor: '#fff',
+                        boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+                        width: '500px',
+                        padding: '2em',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        gap: '20px'
                     }
                 }>
-                    <Input type='text' width={'75%'} placeholder='Naziv' {...register("name", { required: true })} />
-                    <Input type='text' width={'75%'} placeholder='Opis' {...register("description", { required: true })} />
-                    <Input type='text' width={'75%'} placeholder='Broj strana' {...register("pageNumber", { required: true })} />                    <Input type='text' width={'75%'} placeholder='Godina objavljivanja' {...register("publishingYear", { required: true })} />
-                    <Flex width={'75%'} gap={'5%'}>
-                        <Select placeholder='Select author' {...register("authorId", { required: true })}>
-                            {
-                                authors.data.map(author =>
-                                    <option value={author.id}>
-                                        {author.firstName + ' ' + author.lastName}
-                                    </option>
-                                )
-                            }
-                        </Select>
-                        <Button>
-                            <IoMdPersonAdd />
-                        </Button>
-                    </Flex>
-                    <Flex width={'75%'} gap={'5%'}>
-                        <Select placeholder='Select publisher' {...register("publisherId", { required: true })}>
-                            {
-                                publishers.data.map(publisher =>
-                                    <option value={publisher.id}>
-                                        {publisher.name}
-                                    </option>
-                                )
-                            }
-                        </Select>
-                        <Button>
-                            <MdLibraryAdd />
-                        </Button>
-                    </Flex>
-                    <Select placeholder='Select category' width={'75%'} {...register("categoryId", { required: true })}>
+                    <ModalCloseButton />
+                    <Text fontSize="2xl" marginBottom={'20px'}>Dodajte novu knjigu!</Text>
+                    <FormControl css={
                         {
-                            categories.data.map(category =>
-                                <option value={category.id}>
-                                    {category.name}
-                                </option>
-                            )
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: '20px'
                         }
-                    </Select>
-                    <Input type='file' width={'75%'} onChange={handleFileChange} />
-                </FormControl>
-                <Button width={'75%'} backgroundColor={'#000'} color='#fff' marginTop={'20px'} _hover={{ backgroundColor: '#ff6600' }} onClick={handleSubmit(onSubmit)}>Dodaj knjigu</Button>
-            </ModalContent>
-        </Modal >
+                    }>
+                        <Input type='text' width={'75%'} placeholder='Naziv' {...register("name", { required: true })} />
+                        <Input type='text' width={'75%'} placeholder='Opis' {...register("description", { required: true })} />
+                        <Input type='text' width={'75%'} placeholder='Broj strana' {...register("pageNumber", { required: true })} />                    <Input type='text' width={'75%'} placeholder='Godina objavljivanja' {...register("publishingYear", { required: true })} />
+                        <Flex width={'75%'} gap={'5%'}>
+                            <Select placeholder='Select author' {...register("authorId", { required: true })}>
+                                {
+                                    authors.data.map(author =>
+                                        <option value={author.id}>
+                                            {author.firstName + ' ' + author.lastName}
+                                        </option>
+                                    )
+                                }
+                            </Select>
+                            <Button onClick={onOpenAuthor}>
+                                <IoMdPersonAdd />
+                            </Button>
+                        </Flex>
+                        <Flex width={'75%'} gap={'5%'}>
+                            <Select placeholder='Select publisher' {...register("publisherId", { required: true })}>
+                                {
+                                    publishers.data.map(publisher =>
+                                        <option value={publisher.id}>
+                                            {publisher.name}
+                                        </option>
+                                    )
+                                }
+                            </Select>
+                            <Button onClick={onOpenPublisher}>
+                                <MdLibraryAdd />
+                            </Button>
+                        </Flex>
+                        <Select placeholder='Select category' width={'75%'} {...register("categoryId", { required: true })}>
+                            {
+                                categories.data.map(category =>
+                                    <option value={category.id}>
+                                        {category.name}
+                                    </option>
+                                )
+                            }
+                        </Select>
+                        <Input type='file' width={'75%'} onChange={handleFileChange} />
+                    </FormControl>
+                    <Button width={'75%'} backgroundColor={'#000'} color='#fff' marginTop={'20px'} _hover={{ backgroundColor: '#ff6600' }} onClick={handleSubmit(onSubmit)}>Dodaj knjigu</Button>
+                </ModalContent>
+            </Modal >
+            <AddAuthorForm isOpen={isOpenAuthor} onClose={onCloseAuthor} onOpen={onOpenAuthor} />
+            <AddPublisherForm isOpen={isOpenPublisher} onClose={onClosePublisher} onOpen={onOpenPublisher} />
+        </>
+
     )
 }

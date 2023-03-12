@@ -8,6 +8,7 @@ import axios from 'axios'
 import env from "react-dotenv";
 import { RegisterSeller } from '../types/RegisterSeller'
 import { Author } from '../Model/Author'
+import { AddAuthor } from '../types/AddAuthor'
 
 
 export type AuthorStore = AuthorStoreState & AuthorStoreActions
@@ -20,15 +21,21 @@ type AuthorResponse = {
 
 export type AuthorStoreActions = {
     getAuthors: () => void
-
+    addAuthor: (author: AddAuthor) => void
 }
 
 export type AuthorStoreState = {
     authors: AuthorResponse
+    addAuthorRes: AuthorResponse
 }
 
 const state: AuthorStoreState = {
     authors: {
+        data: [],
+        error: null,
+        status: ResponseStatus.Loading
+    },
+    addAuthorRes: {
         data: [],
         error: null,
         status: ResponseStatus.Loading
@@ -65,6 +72,40 @@ export const authorStoreSlice: StateCreator<AppState, [], [], AuthorStore> = (se
             set(
                 produce((state: AuthorStore) => {
                     state.authors.status = ResponseStatus.Error
+                    return state
+                })
+            )
+        }
+    },
+    addAuthor: async (author: AddAuthor) => {
+        set(
+            produce((state: AppState) => {
+                state.addAuthorRes.status = ResponseStatus.Loading
+                return state
+            })
+        )
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_URL}/authors/add`,
+                author,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + get().token
+                    }
+                })
+            set(
+                produce((state: AppState) => {
+                    state.addAuthorRes.data = res.data
+                    state.addAuthorRes.status = ResponseStatus.Success
+                    return state
+                })
+            )
+        }
+        catch (err) {
+            console.log(err)
+            set(
+                produce((state: AppState) => {
+                    state.addAuthorRes.status = ResponseStatus.Error
                     return state
                 })
             )

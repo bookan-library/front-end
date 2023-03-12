@@ -2,9 +2,12 @@ import { Box, Button, Flex, Link, Popover, PopoverContent, PopoverTrigger, Stack
 import React from 'react'
 import { DesktopSubNav, NavItem } from '../DesktopSubNav';
 import { FiUserPlus } from "react-icons/fi";
+import { BiBookAdd } from "react-icons/bi";
+
 import { User } from '../../../Model/User';
 import { Roles } from '../../../types/Roles';
 import { RegisterSellerForm } from '../../Auth/RegisterSeller';
+import { AddBookForm } from '../../Book/AddBookForm';
 
 export const DesktopNav = ({ loggedUser }: any) => {
 
@@ -155,6 +158,8 @@ export const DesktopNav = ({ loggedUser }: any) => {
     const popoverContentBgColor = useColorModeValue('white', 'gray.800');
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isOpenBook, onOpen: onOpenBook, onClose: onCloseBook } = useDisclosure();
+
 
     return (
         <Stack direction={'row'} spacing={4} alignItems={'center'} justify={'space-between'} w={'100%'}>
@@ -213,6 +218,16 @@ export const DesktopNav = ({ loggedUser }: any) => {
                     <RegisterSellerForm onOpen={onOpen} onClose={onClose} isOpen={isOpen}></RegisterSellerForm>
                 </>
 
+            }
+            {
+                loggedUser !== undefined && loggedUser.role == Roles.SELLER &&
+                <>
+                    <Button gap={'10px'} onClick={onOpenBook}>
+                        <BiBookAdd></BiBookAdd>
+                        DODAJ KNJIGU
+                    </Button>
+                    <AddBookForm onOpen={onOpenBook} onClose={onCloseBook} isOpen={isOpenBook}></AddBookForm>
+                </>
             }
         </Stack>
     )

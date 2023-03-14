@@ -85,7 +85,6 @@ export const authStoreSlice: StateCreator<AuthStore> = (set, get) => ({
         status: ResponseStatus.Loading,
     },
     registerBuyer: async (buyer: RegisterBuyer) => {
-        console.log(env.REACT_APP_URL)
         set(
             produce((state: AuthStore) => {
                 state.registerBuyerDetails.status = ResponseStatus.Loading;
@@ -150,7 +149,6 @@ export const authStoreSlice: StateCreator<AuthStore> = (set, get) => ({
         status: ResponseStatus.Loading,
     },
     getLoggedUser: async () => {
-        console.log(env.REACT_APP_URL)
         set(
             produce((state: AuthStore) => {
                 state.loggedUser.status = ResponseStatus.Loading;

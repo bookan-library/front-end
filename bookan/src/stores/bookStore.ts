@@ -9,27 +9,35 @@ import env from "react-dotenv";
 import { RegisterSeller } from '../types/RegisterSeller'
 import { Author } from '../Model/Author'
 import { AddBook } from '../types/AddBook'
+import { Book } from '../Model/Book'
 
 
 export type BookStore = BookStoreState & BookStoreActions
 
 type BookResponse = {
-    data: Author[]
+    data: Book[]
     error: null
     status: ResponseStatus
 }
 
 export type BookStoreActions = {
     addBook: (book: AddBook) => void
-
+    getBooksByCategory: (category: string, pageNumber: number) => void
+    searchBooks: (search: string, pageNumber: number) => void
 }
 
 export type BookStoreState = {
     addBookRes: BookResponse
+    books: BookResponse
 }
 
 const state: BookStoreState = {
     addBookRes: {
+        data: [],
+        error: null,
+        status: ResponseStatus.Loading
+    },
+    books: {
         data: [],
         error: null,
         status: ResponseStatus.Loading
@@ -76,6 +84,70 @@ export const bookStoreSlice: StateCreator<AppState, [], [], BookStore> = (set, g
             set(
                 produce((state: AppState) => {
                     state.addBookRes.status = ResponseStatus.Error
+                    return state
+                })
+            )
+        }
+    },
+    getBooksByCategory: async (category: string, pageNumber: number) => {
+        set(
+            produce((state: AppState) => {
+                state.books.status = ResponseStatus.Loading
+                return state
+            })
+        )
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_URL}/books/categories/${category}?pageNumber=${pageNumber}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+            set(
+                produce((state: AppState) => {
+                    state.books.data = res.data
+                    state.books.status = ResponseStatus.Success
+                    return state
+                })
+            )
+        }
+        catch (err) {
+            console.log(err)
+            set(
+                produce((state: AppState) => {
+                    state.books.status = ResponseStatus.Error
+                    return state
+                })
+            )
+        }
+    },
+    searchBooks: async (search: string, pageNumber: number) => {
+        set(
+            produce((state: AppState) => {
+                state.books.status = ResponseStatus.Loading
+                return state
+            })
+        )
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_URL}/books?search=${search}&pageNumber=${pageNumber}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+            set(
+                produce((state: AppState) => {
+                    state.books.data = res.data
+                    state.books.status = ResponseStatus.Success
+                    return state
+                })
+            )
+        }
+        catch (err) {
+            console.log(err)
+            set(
+                produce((state: AppState) => {
+                    state.books.status = ResponseStatus.Error
                     return state
                 })
             )

@@ -2,6 +2,7 @@ import { AuthorStore } from "./authorStore"
 import { AuthStore } from "./authStore"
 import { BookStore } from "./bookStore"
 import { CategoryStore } from "./categoryStore"
+import { NewsletterStore } from "./newsletterStore"
 import { PublisherStore } from "./publisherStore"
 
 export type ApiResponse = {
@@ -16,4 +17,4 @@ export enum ResponseStatus {
     Error = "error",
 }
 
-export type AppState = AuthorStore & AuthStore & PublisherStore & CategoryStore & BookStore
+export type AppState = AuthorStore & AuthStore & PublisherStore & CategoryStore & BookStore & NewsletterStore

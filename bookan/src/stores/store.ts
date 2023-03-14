@@ -5,17 +5,19 @@ import { AuthorStore, authorStoreSlice } from './authorStore'
 import { AuthStore, AuthStoreActions, authStoreSlice, AuthStoreState } from './authStore'
 import { BookStore, bookStoreSlice } from './bookStore'
 import { CategoryStore, categoryStoreSlice } from './categoryStore'
+import { NewsletterStore, newsletterStoreSlice } from './newsletterStore'
 import { PublisherStore, publisherStoreSlice } from './publisherStore'
 
 
-export const useApplicationStore = create<AuthStore & AuthorStore & PublisherStore & CategoryStore & BookStore>()(
+export const useApplicationStore = create<AuthStore & AuthorStore & PublisherStore & CategoryStore & BookStore & NewsletterStore>()(
     persist(
         immer((...a) => ({
             ...authStoreSlice(...a),
             ...authorStoreSlice(...a),
             ...publisherStoreSlice(...a),
             ...categoryStoreSlice(...a),
-            ...bookStoreSlice(...a)
+            ...bookStoreSlice(...a),
+            ...newsletterStoreSlice(...a)
             // ...fileStoreSlice(...a),
         })),
         {

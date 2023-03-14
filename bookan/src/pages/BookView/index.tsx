@@ -3,6 +3,7 @@ import { Divider, Flex, Input, InputGroup, InputLeftElement, Text } from '@chakr
 import React, { useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom';
 import { BookCard } from '../../components/Book/BookCard';
+import { Newsletter } from '../../components/Newsletter';
 import { useApplicationStore } from '../../stores/store'
 
 export const BookView = () => {
@@ -45,6 +46,7 @@ export const BookView = () => {
                     )
                 }
             </Flex>
+            <Newsletter></Newsletter>
         </>
 
 

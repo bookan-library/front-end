@@ -1,5 +1,6 @@
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import { Box, Flex, Icon, Link, Popover, PopoverContent, PopoverTrigger, Stack, Text, useColorModeValue } from '@chakra-ui/react';
+import { useApplicationStore } from '../../../stores/store';
 
 export interface NavItem {
     label: string;
@@ -9,6 +10,10 @@ export interface NavItem {
 }
 
 export const DesktopSubNav = ({ label, href, subLabel, children }: NavItem) => {
+
+    const getBooksByCategory = useApplicationStore(state => state.getBooksByCategory)
+    const books = useApplicationStore(state => state.books)
+
     return (
         <>
             <Popover trigger={'hover'} placement={'bottom-start'} size={'md'}>
@@ -64,7 +69,7 @@ export const DesktopSubNav = ({ label, href, subLabel, children }: NavItem) => {
                     {children && children?.map((child =>
                         <Link
                             key={child.label}
-                            href={href}
+                            href={`/books/categories/${child.label}`}
                             role={'group'}
                             display={'block'}
                             p={2}
@@ -76,6 +81,7 @@ export const DesktopSubNav = ({ label, href, subLabel, children }: NavItem) => {
                                     minWidth: '190px'
                                 }
                             }
+
                         // textUnderline={'none'}
                         >
                             <Stack direction={'row'} align={'center'}>

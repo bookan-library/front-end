@@ -3,8 +3,7 @@ import React from 'react'
 import { DesktopSubNav, NavItem } from '../DesktopSubNav';
 import { FiUserPlus } from "react-icons/fi";
 import { BiBookAdd } from "react-icons/bi";
-
-import { User } from '../../../Model/User';
+import { ImHome } from 'react-icons/im'
 import { Roles } from '../../../types/Roles';
 import { RegisterSellerForm } from '../../Auth/RegisterSeller';
 import { AddBookForm } from '../../Book/AddBookForm';
@@ -164,6 +163,7 @@ export const DesktopNav = ({ loggedUser }: any) => {
     return (
         <Stack direction={'row'} spacing={4} alignItems={'center'} justify={'space-between'} w={'100%'}>
             <Flex gap={'25px'}>
+                <ImHome fontSize={'25px'}></ImHome>
                 {NAV_ITEMS.map((navItem) => (
                     <Box key={navItem.label}>
                         <Popover trigger={'hover'} placement={'bottom-start'} size={'20px'}>

@@ -2,6 +2,7 @@ import { Navigate, RouteObject } from "react-router-dom";
 import App from "../App";
 import { VerificationPage } from "../components/VerificationPage";
 import { VerificationWrapper } from "../components/VerificationWrapper";
+import { BookView } from "../pages/BookView";
 
 // const URLS = {
 //     ROOT: '/',
@@ -19,7 +20,10 @@ export const routes: RouteObject[] = [
         path: '/',
         element: <><App /></>,
         children: [
-
+            {
+                path: `/books/categories/:category`,
+                element: <BookView></BookView>
+            }
         ]
     },
     {

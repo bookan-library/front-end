@@ -1,6 +1,11 @@
 import { extendTheme, StyleFunctionProps } from "@chakra-ui/react"
 
 const theme = extendTheme({
+    colors: {
+        button: {
+            hover: "red",
+        },
+    },
     components: {
         Popover: {
             baseStyle: {

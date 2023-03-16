@@ -5,28 +5,31 @@ import { AuthorStore, authorStoreSlice } from './authorStore'
 import { AuthStore, AuthStoreActions, authStoreSlice, AuthStoreState } from './authStore'
 import { BookStore, bookStoreSlice } from './bookStore'
 import { CategoryStore, categoryStoreSlice } from './categoryStore'
+import { CommentStore, commentStoreSlice } from './commentStore'
 import { NewsletterStore, newsletterStoreSlice } from './newsletterStore'
 import { PublisherStore, publisherStoreSlice } from './publisherStore'
 
 
-export const useApplicationStore = create<AuthStore & AuthorStore & PublisherStore & CategoryStore & BookStore & NewsletterStore>()(
-    persist(
-        immer((...a) => ({
-            ...authStoreSlice(...a),
-            ...authorStoreSlice(...a),
-            ...publisherStoreSlice(...a),
-            ...categoryStoreSlice(...a),
-            ...bookStoreSlice(...a),
-            ...newsletterStoreSlice(...a)
-            // ...fileStoreSlice(...a),
-        })),
-        {
-            //     // partialize: ({ token, user, boxType }) => ({
-            //     //     token,
-            //     //     user,
-            //     //     boxType,
-            //     // }),
-            name: 'application-store',
-        }
+export const useApplicationStore = create<AuthStore & AuthorStore & PublisherStore & CategoryStore
+    & BookStore & NewsletterStore & CommentStore>()(
+        persist(
+            immer((...a) => ({
+                ...authStoreSlice(...a),
+                ...authorStoreSlice(...a),
+                ...publisherStoreSlice(...a),
+                ...categoryStoreSlice(...a),
+                ...bookStoreSlice(...a),
+                ...newsletterStoreSlice(...a),
+                ...commentStoreSlice(...a)
+                // ...fileStoreSlice(...a),
+            })),
+            {
+                //     // partialize: ({ token, user, boxType }) => ({
+                //     //     token,
+                //     //     user,
+                //     //     boxType,
+                //     // }),
+                name: 'application-store',
+            }
+        )
     )
-)

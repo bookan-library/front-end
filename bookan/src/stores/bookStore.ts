@@ -31,6 +31,7 @@ export type BookStoreActions = {
     getBooksByCategory: (category: string, pageNumber: number) => void
     searchBooks: (search: string, pageNumber: number) => void
     getBookCount: () => void
+    getBookById: (id: string) => void
 }
 
 export type BookStoreState = {
@@ -54,7 +55,7 @@ const state: BookStoreState = {
         data: -1,
         error: null,
         status: ResponseStatus.Loading
-    }
+    },
 }
 
 export const bookStoreSlice: StateCreator<AppState, [], [], BookStore> = (set, get) => ({
@@ -193,6 +194,38 @@ export const bookStoreSlice: StateCreator<AppState, [], [], BookStore> = (set, g
             set(
                 produce((state: AppState) => {
                     state.bookCount.status = ResponseStatus.Error
+                    return state
+                })
+            )
+        }
+    },
+    getBookById: async (id: string) => {
+        set(
+            produce((state: AppState) => {
+                state.books.status = ResponseStatus.Loading
+                return state
+            })
+        )
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_URL}/books/${id}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+            set(
+                produce((state: AppState) => {
+                    state.books.data = [res.data]
+                    state.books.status = ResponseStatus.Success
+                    return state
+                })
+            )
+        }
+        catch (err) {
+            console.log(err)
+            set(
+                produce((state: AppState) => {
+                    state.books.status = ResponseStatus.Error
                     return state
                 })
             )

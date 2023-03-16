@@ -55,7 +55,7 @@ export const BookView = () => {
             >
                 {
                     books?.data.map(book =>
-                        <BookCard book={book}></BookCard>
+                        <BookCard book={book} category={params.category ?? ''}></BookCard>
                     )
                 }
             </Flex>

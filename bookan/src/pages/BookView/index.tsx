@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom';
 import { BookCard } from '../../components/Book/BookCard';
 import { Newsletter } from '../../components/Newsletter';
+import { Paginator } from '../../components/Paginator';
 import { useApplicationStore } from '../../stores/store'
 
 export const BookView = () => {
@@ -11,16 +12,28 @@ export const BookView = () => {
     const getBooksByCategory = useApplicationStore(state => state.getBooksByCategory)
     const books = useApplicationStore(state => state.books)
     const searchBooks = useApplicationStore(state => state.searchBooks)
+    const getBookCount = useApplicationStore(state => state.getBookCount)
+    const bookCount = useApplicationStore(state => state.bookCount)
     const [search, setSearch] = useState<string>('')
+    const [currentPage, setCurrentPage] = useState<number>(1)
+
 
     useEffect(() => {
-        getBooksByCategory(params.category ?? '', 1)
+        getBooksByCategory(params.category ?? '', currentPage)
+        getBookCount()
     }, [])
+
+    useEffect(() => {
+        getBooksByCategory(params.category ?? '', currentPage)
+    }, [currentPage])
 
     useEffect(() => {
         searchBooks(search, 1)
     }, [search])
 
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page)
+    }
 
     return (
         <>
@@ -45,6 +58,9 @@ export const BookView = () => {
                         <BookCard book={book}></BookCard>
                     )
                 }
+            </Flex>
+            <Flex justifyContent={'center'} padding='20px 0'>
+                <Paginator totalCount={bookCount.data} currentPage={currentPage} pageSize={1} onPageChange={handlePageChange} siblingCount={2}></Paginator>
             </Flex>
             <Newsletter></Newsletter>
         </>

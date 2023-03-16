@@ -20,15 +20,23 @@ type BookResponse = {
     status: ResponseStatus
 }
 
+type BookCountResponse = {
+    data: number
+    error: null
+    status: ResponseStatus
+}
+
 export type BookStoreActions = {
     addBook: (book: AddBook) => void
     getBooksByCategory: (category: string, pageNumber: number) => void
     searchBooks: (search: string, pageNumber: number) => void
+    getBookCount: () => void
 }
 
 export type BookStoreState = {
     addBookRes: BookResponse
     books: BookResponse
+    bookCount: BookCountResponse
 }
 
 const state: BookStoreState = {
@@ -42,6 +50,11 @@ const state: BookStoreState = {
         error: null,
         status: ResponseStatus.Loading
     },
+    bookCount: {
+        data: -1,
+        error: null,
+        status: ResponseStatus.Loading
+    }
 }
 
 export const bookStoreSlice: StateCreator<AppState, [], [], BookStore> = (set, get) => ({
@@ -148,6 +161,38 @@ export const bookStoreSlice: StateCreator<AppState, [], [], BookStore> = (set, g
             set(
                 produce((state: AppState) => {
                     state.books.status = ResponseStatus.Error
+                    return state
+                })
+            )
+        }
+    },
+    getBookCount: async () => {
+        set(
+            produce((state: AppState) => {
+                state.bookCount.status = ResponseStatus.Loading
+                return state
+            })
+        )
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_URL}/books/count`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+            set(
+                produce((state: AppState) => {
+                    state.bookCount.data = res.data
+                    state.bookCount.status = ResponseStatus.Success
+                    return state
+                })
+            )
+        }
+        catch (err) {
+            console.log(err)
+            set(
+                produce((state: AppState) => {
+                    state.bookCount.status = ResponseStatus.Error
                     return state
                 })
             )

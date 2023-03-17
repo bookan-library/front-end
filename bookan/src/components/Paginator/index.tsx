@@ -34,21 +34,28 @@ export const Paginator = ({ totalCount, currentPage, pageSize, onPageChange, sib
         onPageChange(currentPage - 1);
     };
     let lastPage
-    if (paginationRange)
+    let firstPage
+    if (paginationRange) {
         lastPage = paginationRange[paginationRange.length - 1];
+        firstPage = paginationRange[0];
+    }
     return (
         <List
             display={'flex'}
             alignItems={'center'}
         >
             {/* Left navigation arrow */}
-            < ListItem
-                cursor={'pointer'}
-                onClick={onPrevious}
-            >
+            {
+                firstPage !== currentPage &&
+                < ListItem
+                    cursor={'pointer'}
+                    onClick={onPrevious}
+                >
 
-                <IoIosArrowBack />
-            </ListItem >
+                    <IoIosArrowBack />
+                </ListItem >
+            }
+
             {
                 paginationRange && paginationRange.map(pageNumber => {
 
@@ -83,7 +90,6 @@ export const Paginator = ({ totalCount, currentPage, pageSize, onPageChange, sib
             }
             {/*  Right Navigation arrow */}
             {
-
                 lastPage !== currentPage &&
                 <ListItem
                     onClick={onNext}

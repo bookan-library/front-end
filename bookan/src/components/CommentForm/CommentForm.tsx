@@ -11,6 +11,7 @@ import { CommentResponse } from '../../stores/commentStore'
 import { useApplicationStore } from '../../stores/store'
 import { ResponseStatus } from '../../stores/types'
 import { Roles } from '../../types/Roles'
+import { displayToast } from '../../utils/toast'
 import { LoginForm } from '../Auth/Login'
 
 
@@ -43,25 +44,7 @@ export const CommentForm = ({ book }: Props) => {
             bookId: book.id,
             comment: data.comment
         })
-        displayToast(addCommentRes)
-    }
-
-    const displayToast = (res: CommentResponse) => {
-        if (res.status === ResponseStatus.Error)
-            return toast({
-                title: 'Your comment successfully sent.',
-                // description: "We've created your account for you.",
-                status: 'success',
-                duration: 9000,
-                isClosable: true,
-            })
-        return toast({
-            title: "Your comment wasn't successfully sent. Try again!",
-            // description: "We've created your account for you.",
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-        })
+        displayToast("Comment successfully sent", toast, addCommentRes.status)
     }
 
     return (

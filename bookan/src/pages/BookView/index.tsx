@@ -1,7 +1,7 @@
 import { SearchIcon } from '@chakra-ui/icons';
-import { Divider, Flex, Input, InputGroup, InputLeftElement, Text } from '@chakra-ui/react';
+import { Box, Button, Divider, Flex, Input, InputGroup, InputLeftElement, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react'
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { BookCard } from '../../components/Book/BookCard';
 import { Newsletter } from '../../components/Newsletter';
 import { Paginator } from '../../components/Paginator';
@@ -16,7 +16,8 @@ export const BookView = () => {
     const bookCount = useApplicationStore(state => state.bookCount)
     const [search, setSearch] = useState<string>('')
     const [currentPage, setCurrentPage] = useState<number>(1)
-
+    const [display, setDisplay] = useState<boolean>(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
         getBooksByCategory(params.category ?? '', currentPage)
@@ -55,7 +56,48 @@ export const BookView = () => {
             >
                 {
                     books?.data.map(book =>
-                        <BookCard book={book} category={params.category ?? ''}></BookCard>
+                        <BookCard book={book} category={params.category ?? ''} setDisplay={setDisplay}>
+                            <Box
+                                width={'100%'}
+                                height={'100%'}
+                                bg={'rgba(0, 0, 0, .2)'}
+                                display={display ? 'flex' : 'none'}
+                                flexDirection={'column'}
+                                alignItems={'center'}
+                                justifyContent={'center'}
+                                gap={'1.5em'}
+                                position={'absolute'}
+                                top={'0'}
+                                left={'0'}
+                                zIndex={'100'}
+                            >
+                                <Button
+                                    bg={'#000'}
+                                    color={'#fff'}
+                                    width={'130px'}
+                                    _hover={
+                                        {
+                                            bg: 'button.hover'
+                                        }
+                                    }
+                                    onClick={() => navigate(`/books/categories/${params.category ?? ''}/${book.id}`)}
+                                >
+                                    DETALJNIJE
+                                </Button>
+                                <Button
+                                    bg={'#000'}
+                                    color={'#fff'}
+                                    width={'130px'}
+                                    _hover={
+                                        {
+                                            bg: 'button.hover'
+                                        }
+                                    }
+                                >
+                                    BRZI PREGLED
+                                </Button>
+                            </Box>
+                        </BookCard>
                     )
                 }
             </Flex>

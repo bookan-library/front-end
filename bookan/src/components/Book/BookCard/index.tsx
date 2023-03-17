@@ -6,12 +6,13 @@ import { Book } from '../../../Model/Book'
 interface Props {
     book: Book
     category: string
+    children: any
+    setDisplay: (val: boolean) => void
 }
 
-export const BookCard = ({ book, category }: Props) => {
+export const BookCard = ({ book, category, children, setDisplay }: Props) => {
 
-    const [display, setDisplay] = useState<boolean>(false)
-    const navigate = useNavigate()
+
 
     return (
         <Box
@@ -47,10 +48,9 @@ export const BookCard = ({ book, category }: Props) => {
                     <Text>{book.author.firstName}</Text>
                     <Text>100 RSD</Text>
                 </Flex>
-
-
             </Flex>
-            <Box
+            {children}
+            {/* <Box
                 width={'100%'}
                 height={'100%'}
                 bg={'rgba(0, 0, 0, .2)'}
@@ -89,7 +89,7 @@ export const BookCard = ({ book, category }: Props) => {
                 >
                     BRZI PREGLED
                 </Button>
-            </Box>
+            </Box> */}
         </Box >
     )
 }

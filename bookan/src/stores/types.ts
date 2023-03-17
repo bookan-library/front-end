@@ -5,6 +5,7 @@ import { CategoryStore } from "./categoryStore"
 import { CommentStore } from "./commentStore"
 import { NewsletterStore } from "./newsletterStore"
 import { PublisherStore } from "./publisherStore"
+import { WishlistStore } from "./wishlistStore"
 
 export type ApiResponse = {
     data: any
@@ -19,4 +20,4 @@ export enum ResponseStatus {
 }
 
 export type AppState = AuthorStore & AuthStore & PublisherStore
-    & CategoryStore & BookStore & NewsletterStore & CommentStore
+    & CategoryStore & BookStore & NewsletterStore & CommentStore & WishlistStore

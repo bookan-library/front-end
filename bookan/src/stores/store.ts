@@ -8,10 +8,11 @@ import { CategoryStore, categoryStoreSlice } from './categoryStore'
 import { CommentStore, commentStoreSlice } from './commentStore'
 import { NewsletterStore, newsletterStoreSlice } from './newsletterStore'
 import { PublisherStore, publisherStoreSlice } from './publisherStore'
+import { WishlistStore, wishlistStoreSlice } from './wishlistStore'
 
 
 export const useApplicationStore = create<AuthStore & AuthorStore & PublisherStore & CategoryStore
-    & BookStore & NewsletterStore & CommentStore>()(
+    & BookStore & NewsletterStore & CommentStore & WishlistStore>()(
         persist(
             immer((...a) => ({
                 ...authStoreSlice(...a),
@@ -20,7 +21,8 @@ export const useApplicationStore = create<AuthStore & AuthorStore & PublisherSto
                 ...categoryStoreSlice(...a),
                 ...bookStoreSlice(...a),
                 ...newsletterStoreSlice(...a),
-                ...commentStoreSlice(...a)
+                ...commentStoreSlice(...a),
+                ...wishlistStoreSlice(...a)
                 // ...fileStoreSlice(...a),
             })),
             {

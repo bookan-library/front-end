@@ -22,15 +22,21 @@ export type CommentResponse = {
 
 export type CommentStoreActions = {
     addComment: (comment: AddComment) => void
-
+    getCommentsForBook: (bookId: string) => void
 }
 
 export type CommentStoreState = {
     addCommentRes: CommentResponse
+    comments: CommentResponse
 }
 
 const state: CommentStoreState = {
     addCommentRes: {
+        data: [],
+        error: null,
+        status: ResponseStatus.Loading
+    },
+    comments: {
         data: [],
         error: null,
         status: ResponseStatus.Loading
@@ -68,6 +74,39 @@ export const commentStoreSlice: StateCreator<AppState, [], [], CommentStore> = (
             set(
                 produce((state: AppState) => {
                     state.addCommentRes.status = ResponseStatus.Error
+                    return state
+                })
+            )
+        }
+    },
+    getCommentsForBook: async (bookId: string) => {
+        set(
+            produce((state: AppState) => {
+                state.comments.status = ResponseStatus.Loading
+                return state
+            })
+        )
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_URL}/comments/${bookId}`,
+
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+            set(
+                produce((state: AppState) => {
+                    state.comments.data = res.data
+                    state.comments.status = ResponseStatus.Success
+                    return state
+                })
+            )
+        }
+        catch (err) {
+            console.log(err)
+            set(
+                produce((state: AppState) => {
+                    state.comments.status = ResponseStatus.Error
                     return state
                 })
             )

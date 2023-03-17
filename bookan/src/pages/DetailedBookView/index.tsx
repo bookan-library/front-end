@@ -11,15 +11,19 @@ import { useApplicationStore } from '../../stores/store';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs';
 import { CommentForm } from '../../components/CommentForm/CommentForm';
 import { Newsletter } from '../../components/Newsletter';
+import { CommentBox } from '../../components/Comment/Comment';
 
 export const DetailedBookView = () => {
     const params = useParams();
     const getBookById = useApplicationStore(state => state.getBookById)
     const book = useApplicationStore(state => state.books.data[0])
+    const getComments = useApplicationStore(state => state.getCommentsForBook)
+    const comments = useApplicationStore(state => state.comments)
 
     useEffect(() => {
         getBookById(params.id ?? '')
-        console.log(book)
+        getComments(params.id ?? '')
+        console.log('comments ', comments)
     }, [])
 
     return (
@@ -103,6 +107,13 @@ export const DetailedBookView = () => {
                         </TabPanel>
                         <TabPanel width={'80%'}>
                             <CommentForm book={book} />
+                            <Text mt={'20px'} fontSize={'18px'} ml={'10px'} color={'gray'}>OSTALI KOMENTARI</Text>
+                            <Divider />
+                            {
+                                comments.data.map(comment =>
+                                    <CommentBox comment={comment}></CommentBox>
+                                )
+                            }
                         </TabPanel>
                     </TabPanels>
                 </Tabs>

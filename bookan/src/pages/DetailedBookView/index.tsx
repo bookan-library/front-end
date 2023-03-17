@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/button';
 import { Divider, Flex, Text } from '@chakra-ui/layout';
 import { BsCartPlus } from 'react-icons/bs'
-import { AiOutlineHeart } from 'react-icons/ai'
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai'
 
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router';
@@ -12,6 +12,10 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs';
 import { CommentForm } from '../../components/CommentForm/CommentForm';
 import { Newsletter } from '../../components/Newsletter';
 import { CommentBox } from '../../components/Comment/Comment';
+import { LoginForm } from '../../components/Auth/Login';
+import { useDisclosure, useToast } from '@chakra-ui/react';
+import { Roles } from '../../types/Roles';
+import { displayToast } from '../../utils/toast';
 
 export const DetailedBookView = () => {
     const params = useParams();
@@ -19,12 +23,44 @@ export const DetailedBookView = () => {
     const book = useApplicationStore(state => state.books.data[0])
     const getComments = useApplicationStore(state => state.getCommentsForBook)
     const comments = useApplicationStore(state => state.comments)
+    const addToWishlist = useApplicationStore(state => state.addToWishlist)
+    const addToWishlistRes = useApplicationStore(state => state.addToWishlistRes)
+    const loggedUser = useApplicationStore(state => state.loggedUser.data[0])
+    const checkIfBookInWishlist = useApplicationStore(state => state.checkIfBookInWishlist)
+    const isBookInWishlist = useApplicationStore(state => state.isBookInWishlist)
+    const removeFromWishlist = useApplicationStore(state => state.removeFromWishlist)
+    const removeFromWishlistRes = useApplicationStore(state => state.removeFromWishlistRes)
+
 
     useEffect(() => {
         getBookById(params.id ?? '')
         getComments(params.id ?? '')
+        checkIfBookInWishlist(book.id)
+        console.log(isBookInWishlist)
         console.log('comments ', comments)
     }, [])
+
+    const { isOpen: isOpenLogin, onOpen: onOpenLogin, onClose: onCloseLogin } = useDisclosure();
+    const toast = useToast()
+    const handleAddToWishlist = async () => {
+        if (loggedUser === undefined || loggedUser.role !== Roles.BUYER) {
+            onOpenLogin()
+            return
+        }
+        await addToWishlist(book.id)
+        await checkIfBookInWishlist(book.id)
+        displayToast("Book successfully added to wishlist!", toast, addToWishlistRes.status)
+    }
+
+    const handleRemoveFromWishlist = async () => {
+        if (loggedUser === undefined || loggedUser.role !== Roles.BUYER) {
+            onOpenLogin()
+            return
+        }
+        await removeFromWishlist(book.id)
+        await checkIfBookInWishlist(book.id)
+        displayToast("Book successfully removed from wishlist!", toast, removeFromWishlistRes.status)
+    }
 
     return (
         <Flex width={'100%'} direction={'column'} alignItems={'center'} pt={'3em'} gap={'40px'}>
@@ -84,10 +120,19 @@ export const DetailedBookView = () => {
                             <BsCartPlus color='#fff' fontSize={'20px'} />
                         </Button>
                     </Flex>
-                    <Flex alignItems={'center'} gap={'5px'} cursor={'pointer'} mt={'15px'}>
-                        <AiOutlineHeart fontSize={'18px'} />
-                        Sacuvajte u listi zelja
-                    </Flex>
+                    {
+                        isBookInWishlist.data ?
+                            <Flex alignItems={'center'} gap={'5px'} cursor={'pointer'} mt={'15px'} onClick={handleRemoveFromWishlist}>
+                                <AiFillHeart fontSize={'18px'} color={'red'} />
+                                <Text color={'red'}>Uklonite iz liste zelja</Text>
+                            </Flex>
+                            :
+                            <Flex alignItems={'center'} gap={'5px'} cursor={'pointer'} mt={'15px'} onClick={handleAddToWishlist}>
+                                <AiOutlineHeart fontSize={'18px'} />
+                                <Text>Sacuvajte u listi zelja</Text>
+                            </Flex>
+                    }
+
 
                 </Flex>
             </Flex>
@@ -119,6 +164,7 @@ export const DetailedBookView = () => {
                 </Tabs>
             </Flex>
             <Newsletter></Newsletter>
+            <LoginForm isOpen={isOpenLogin} onOpen={onOpenLogin} onClose={onCloseLogin}></LoginForm>
         </Flex>
     )
 }

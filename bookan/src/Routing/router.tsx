@@ -3,6 +3,8 @@ import App from "../App";
 import { VerificationPage } from "../components/VerificationPage";
 import { VerificationWrapper } from "../components/VerificationWrapper";
 import { BookView } from "../pages/BookView";
+import { DetailedBookView } from "../pages/DetailedBookView";
+import { WishlistView } from "../pages/WishlistView";
 
 // const URLS = {
 //     ROOT: '/',
@@ -23,6 +25,14 @@ export const routes: RouteObject[] = [
             {
                 path: `/books/categories/:category`,
                 element: <BookView></BookView>
+            },
+            {
+                path: `/books/categories/:category/:id`,
+                element: <DetailedBookView></DetailedBookView>
+            },
+            {
+                path: `/user/favorite`,
+                element: <WishlistView></WishlistView>
             }
         ]
     },

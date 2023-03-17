@@ -15,6 +15,10 @@ export const Newsletter = () => {
         setEmail('')
     }
 
+    useEffect(() => {
+        setEmail('')
+    })
+
     return (
         <Flex
             height={'250px'}
@@ -26,7 +30,7 @@ export const Newsletter = () => {
             position={'relative'}
         >
             <Image
-                src={'/newsletter-background1.jpg'}
+                src={'/newsletter-background2.jpg'}
                 width={'100%'}
                 height={'100%'}
                 position={'absolute'}

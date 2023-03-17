@@ -32,7 +32,6 @@ export const NavMenu = () => {
     useEffect(() => {
         if (token !== null)
             getLoggedUser()
-        console.log('logged', loggedUser)
     }, [token])
 
     const { isOpen, onToggle } = useDisclosure();

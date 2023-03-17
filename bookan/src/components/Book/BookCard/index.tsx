@@ -1,14 +1,17 @@
 import { Box, Button, ButtonGroup, Card, CardBody, CardFooter, Divider, Flex, Heading, Image, Stack, Text } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { Book } from '../../../Model/Book'
 
 interface Props {
     book: Book
+    category: string
 }
 
-export const BookCard = ({ book }: Props) => {
+export const BookCard = ({ book, category }: Props) => {
 
     const [display, setDisplay] = useState<boolean>(false)
+    const navigate = useNavigate()
 
     return (
         <Box
@@ -70,6 +73,7 @@ export const BookCard = ({ book }: Props) => {
                             bg: 'button.hover'
                         }
                     }
+                    onClick={() => navigate(`/books/categories/${category}/${book.id}`)}
                 >
                     DETALJNIJE
                 </Button>

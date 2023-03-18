@@ -3,6 +3,7 @@ import App from "../App";
 import { VerificationPage } from "../components/VerificationPage";
 import { VerificationWrapper } from "../components/VerificationWrapper";
 import { BookView } from "../pages/BookView";
+import { CartView } from "../pages/CartView";
 import { DetailedBookView } from "../pages/DetailedBookView";
 import { WishlistView } from "../pages/WishlistView";
 
@@ -33,6 +34,10 @@ export const routes: RouteObject[] = [
             {
                 path: `/user/favorite`,
                 element: <WishlistView></WishlistView>
+            },
+            {
+                path: '/user/cart',
+                element: <CartView></CartView>
             }
         ]
     },

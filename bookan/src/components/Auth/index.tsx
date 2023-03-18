@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Link, useDisclosure, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { AiOutlineHeart } from 'react-icons/ai'
+import { BsCartCheck } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 import { useApplicationStore } from '../../stores/store'
 import { Roles } from '../../types/Roles'
@@ -25,6 +26,15 @@ export const AuthMenu = () => {
         navigate('/user/favorite')
     }
 
+    const handleCart = () => {
+        getLoggedUser()
+        if (loggedUser === undefined || loggedUser.role !== Roles.BUYER) {
+            onOpenLogin()
+            return
+        }
+        navigate('user/cart')
+    }
+
     return (
         <Flex width={'100%'}>
             <Flex css={
@@ -41,7 +51,7 @@ export const AuthMenu = () => {
                 {
                     token !== null ?
                         <>
-                            <Text color='white'>{loggedUser.firstName} {loggedUser.lastName}</Text>
+                            <Text color='white'>{loggedUser?.firstName} {loggedUser?.lastName}</Text>
                             <Link color='white' onClick={() => {
                                 logout()
                                 navigate('/')
@@ -63,7 +73,9 @@ export const AuthMenu = () => {
                 <Box onClick={handleFavoriteBooks} cursor={'pointer'}>
                     <AiOutlineHeart fontSize={'18px'} color={'#fff'} />
                 </Box>
-
+                <Box onClick={handleCart} cursor='pointer'>
+                    <BsCartCheck fontSize={'18px'} color={'#fff'} ></BsCartCheck>
+                </Box>
             </Flex>
             <RegisterForm isOpen={isOpenRegister} onOpen={onOpenRegister} onClose={onCloseRegister}></RegisterForm>
             <LoginForm isOpen={isOpenLogin} onOpen={onOpenLogin} onClose={onCloseLogin}></LoginForm>

@@ -3,7 +3,7 @@ window.env = {
   "APPDATA": "C:\\Users\\sara1\\AppData\\Roaming",
   "ChocolateyInstall": "C:\\ProgramData\\chocolatey",
   "ChocolateyLastPathUpdate": "133161093569944063",
-  "CHROME_CRASHPAD_PIPE_NAME": "\\\\.\\pipe\\LOCAL\\crashpad_18740_XSFBRFDPLHZKQGNK",
+  "CHROME_CRASHPAD_PIPE_NAME": "\\\\.\\pipe\\LOCAL\\crashpad_15588_FSHHQJURPDUGLGTZ",
   "COLOR": "1",
   "COLORTERM": "truecolor",
   "CommonProgramFiles": "C:\\Program Files\\Common Files",
@@ -79,7 +79,7 @@ window.env = {
   "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "--ms-enable-electron-run-as-node",
   "VSCODE_GIT_ASKPASS_MAIN": "c:\\Users\\sara1\\AppData\\Local\\Programs\\Microsoft VS Code\\resources\\app\\extensions\\git\\dist\\askpass-main.js",
   "VSCODE_GIT_ASKPASS_NODE": "C:\\Users\\sara1\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
-  "VSCODE_GIT_IPC_HANDLE": "\\\\.\\pipe\\vscode-git-11934d153b-sock",
+  "VSCODE_GIT_IPC_HANDLE": "\\\\.\\pipe\\vscode-git-ab812c00f3-sock",
   "VSCODE_INJECTION": "1",
   "windir": "C:\\WINDOWS",
   "ZES_ENABLE_SYSMAN": "1"

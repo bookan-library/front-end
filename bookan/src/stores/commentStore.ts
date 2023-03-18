@@ -10,6 +10,7 @@ import { RegisterSeller } from '../types/RegisterSeller'
 import { Author } from '../Model/Author'
 import { Category } from '../Model/Category'
 import { AddComment } from '../types/AddComment'
+import { CommentStatus } from '../types/CommentStatus'
 
 
 export type CommentStore = CommentStoreState & CommentStoreActions
@@ -23,11 +24,15 @@ export type CommentResponse = {
 export type CommentStoreActions = {
     addComment: (comment: AddComment) => void
     getCommentsForBook: (bookId: string) => void
+    getPendingComments: () => void
+    approveComment: (commentId: number, isApproved: number) => Promise<void>
 }
 
 export type CommentStoreState = {
     addCommentRes: CommentResponse
     comments: CommentResponse
+    pendingComments: CommentResponse
+    approveCommentRes: CommentResponse
 }
 
 const state: CommentStoreState = {
@@ -37,6 +42,16 @@ const state: CommentStoreState = {
         status: ResponseStatus.Loading
     },
     comments: {
+        data: [],
+        error: null,
+        status: ResponseStatus.Loading
+    },
+    pendingComments: {
+        data: [],
+        error: null,
+        status: ResponseStatus.Loading
+    },
+    approveCommentRes: {
         data: [],
         error: null,
         status: ResponseStatus.Loading
@@ -107,6 +122,76 @@ export const commentStoreSlice: StateCreator<AppState, [], [], CommentStore> = (
             set(
                 produce((state: AppState) => {
                     state.comments.status = ResponseStatus.Error
+                    return state
+                })
+            )
+        }
+    },
+    getPendingComments: async () => {
+        set(
+            produce((state: AppState) => {
+                state.pendingComments.status = ResponseStatus.Loading
+                return state
+            })
+        )
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_URL}/comments/pending`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + get().token
+                    }
+                })
+            set(
+                produce((state: AppState) => {
+                    state.pendingComments.data = res.data
+                    state.pendingComments.status = ResponseStatus.Success
+                    return state
+                })
+            )
+        }
+        catch (err) {
+            console.log(err)
+            set(
+                produce((state: AppState) => {
+                    state.pendingComments.status = ResponseStatus.Error
+                    return state
+                })
+            )
+        }
+    },
+    approveComment: async (commentId: number, isApproved: number) => {
+        set(
+            produce((state: AppState) => {
+                state.approveCommentRes.status = ResponseStatus.Loading
+                return state
+            })
+        )
+        try {
+            const res = await axios.patch(`${process.env.REACT_APP_URL}/comments/approve`,
+                {
+                    id: commentId,
+                    isApproved: isApproved
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + get().token
+                    }
+                })
+            set(
+                produce((state: AppState) => {
+                    state.approveCommentRes.data = res.data
+                    state.approveCommentRes.status = ResponseStatus.Success
+                    return state
+                })
+            )
+        }
+        catch (err) {
+            console.log(err)
+            set(
+                produce((state: AppState) => {
+                    state.approveCommentRes.status = ResponseStatus.Error
                     return state
                 })
             )

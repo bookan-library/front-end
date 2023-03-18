@@ -4,6 +4,7 @@ import { VerificationPage } from "../components/VerificationPage";
 import { VerificationWrapper } from "../components/VerificationWrapper";
 import { BookView } from "../pages/BookView";
 import { CartView } from "../pages/CartView";
+import { CommentsView } from "../pages/CommentsView";
 import { DetailedBookView } from "../pages/DetailedBookView";
 import { WishlistView } from "../pages/WishlistView";
 
@@ -38,6 +39,10 @@ export const routes: RouteObject[] = [
             {
                 path: '/user/cart',
                 element: <CartView></CartView>
+            },
+            {
+                path: '/comments/approvement',
+                element: <CommentsView></CommentsView>
             }
         ]
     },

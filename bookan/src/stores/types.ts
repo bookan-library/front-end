@@ -1,6 +1,7 @@
 import { AuthorStore } from "./authorStore"
 import { AuthStore } from "./authStore"
 import { BookStore } from "./bookStore"
+import { CartStore } from "./cartStore"
 import { CategoryStore } from "./categoryStore"
 import { CommentStore } from "./commentStore"
 import { NewsletterStore } from "./newsletterStore"
@@ -20,4 +21,4 @@ export enum ResponseStatus {
 }
 
 export type AppState = AuthorStore & AuthStore & PublisherStore
-    & CategoryStore & BookStore & NewsletterStore & CommentStore & WishlistStore
+    & CategoryStore & BookStore & NewsletterStore & CommentStore & WishlistStore & CartStore

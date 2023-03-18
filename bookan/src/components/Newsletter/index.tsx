@@ -21,6 +21,7 @@ export const Newsletter = () => {
 
     return (
         <Flex
+            mt={'auto'}
             height={'250px'}
             width={'100%'}
             direction={'column'}

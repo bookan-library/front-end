@@ -3,7 +3,7 @@ import { Divider, Flex, Text } from '@chakra-ui/layout';
 import { BsCartPlus } from 'react-icons/bs'
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router';
 import { Counter } from '../../components/Counter/counter';
 import { Book } from '../../Model/Book';
@@ -30,15 +30,16 @@ export const DetailedBookView = () => {
     const isBookInWishlist = useApplicationStore(state => state.isBookInWishlist)
     const removeFromWishlist = useApplicationStore(state => state.removeFromWishlist)
     const removeFromWishlistRes = useApplicationStore(state => state.removeFromWishlistRes)
-
+    const addToCart = useApplicationStore(state => state.addToCart)
+    const addToCartRes = useApplicationStore(state => state.addToCartRes)
 
     useEffect(() => {
         getBookById(params.id ?? '')
         getComments(params.id ?? '')
         checkIfBookInWishlist(book.id)
-        console.log(isBookInWishlist)
-        console.log('comments ', comments)
     }, [])
+
+    const [quantity, setQuantity] = useState<number>(1)
 
     const { isOpen: isOpenLogin, onOpen: onOpenLogin, onClose: onCloseLogin } = useDisclosure();
     const toast = useToast()
@@ -60,6 +61,15 @@ export const DetailedBookView = () => {
         await removeFromWishlist(book.id)
         await checkIfBookInWishlist(book.id)
         displayToast("Book successfully removed from wishlist!", toast, removeFromWishlistRes.status)
+    }
+
+    const handleAddToCart = async () => {
+        if (loggedUser === undefined || loggedUser.role !== Roles.BUYER) {
+            onOpenLogin()
+            return
+        }
+        await addToCart(book.id, quantity)
+        displayToast("Book successfully added to cart!", toast, addToCartRes.status)
     }
 
     return (
@@ -107,7 +117,7 @@ export const DetailedBookView = () => {
                         Cena: 100 RSD
                     </Text>
                     <Flex alignItems={'flex-end'} mt={'15px'} gap={'1em'}>
-                        <Counter />
+                        <Counter count={quantity} setCount={setQuantity} />
                         <Button
                             bg={'green'}
                             color={'#fff'}
@@ -115,6 +125,7 @@ export const DetailedBookView = () => {
                             _hover={{
                                 bg: 'lightgreen'
                             }}
+                            onClick={handleAddToCart}
                         >
                             DODAJ U KORPU
                             <BsCartPlus color='#fff' fontSize={'20px'} />

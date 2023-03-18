@@ -12,4 +12,5 @@ export interface Book {
     publisher: Publisher
     category: Category
     picUrl: string
+    price: number
 }

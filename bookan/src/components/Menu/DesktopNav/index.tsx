@@ -4,153 +4,14 @@ import { DesktopSubNav, NavItem } from '../DesktopSubNav';
 import { FiUserPlus } from "react-icons/fi";
 import { BiBookAdd } from "react-icons/bi";
 import { ImHome } from 'react-icons/im'
+import { BiCommentCheck } from 'react-icons/bi'
 import { Roles } from '../../../types/Roles';
 import { RegisterSellerForm } from '../../Auth/RegisterSeller';
 import { AddBookForm } from '../../Book/AddBookForm';
+import { useNavigate } from 'react-router-dom';
+import { NAV_ITEMS } from './consts';
 
 export const DesktopNav = ({ loggedUser }: any) => {
-
-    const NAV_ITEMS: Array<NavItem> = [
-        {
-            label: 'KATEGORIJE',
-            children: [
-                {
-                    label: 'DOMACE KNJIGE',
-                    children: [
-                        {
-                            label: 'DOMACE KNJIGE'
-                        },
-                    ]
-                },
-                {
-                    label: 'ROMANI',
-                    children: [
-                        {
-                            label: 'SAVREMENI ROMAN'
-                        },
-                        {
-                            label: 'DOMACI AUTOR'
-                        },
-                        {
-                            label: 'OPSTA KNJIZEVNOST'
-                        },
-                        {
-                            label: 'KLASICI'
-                        },
-                        {
-                            label: 'TRILERI I MISTERIJE'
-                        },
-                        {
-                            label: 'BIOGRAFIJE'
-                        },
-                    ]
-                },
-                {
-                    label: 'TINEJDZ I YA',
-                    children: [
-                        {
-                            label: 'TINEJDZ I YA ROMANI'
-                        },
-                        {
-                            label: 'TINEJDZ I YA PRIRUCNICI'
-                        },
-                    ]
-                },
-                {
-                    label: 'OPSTA INTERESOVANJA',
-                    children: [
-                        {
-                            label: 'POPULARNA PSIHOLOGIJA'
-                        },
-                        {
-                            label: 'ZDRAVLJE, PORODICA I ZIVOTNI STIL'
-                        },
-                        {
-                            label: 'STRIPOVI'
-                        },
-                        {
-                            label: 'MANGE'
-                        },
-                        {
-                            label: 'SPORT'
-                        },
-                    ]
-                },
-                {
-                    label: 'JEZIK I KNJIZEVNOST',
-                    children: [
-                        {
-                            label: 'FILOLOGIJA'
-                        },
-                        {
-                            label: 'POEZIJA'
-                        },
-                        {
-                            label: 'ESEJISTIKA'
-                        },
-                        {
-                            label: 'ISTORIJA I TEORIJA KNJIZEVNOSTI'
-                        },
-                    ]
-                },
-                {
-                    label: 'UMETNOST',
-                    children: [
-                        {
-                            label: 'PRIMENJENA UMETNOST'
-                        },
-                        {
-                            label: 'OPSTA UMETNOST'
-                        },
-                        {
-                            label: 'MUZIKA'
-                        },
-                        {
-                            label: 'POZORISTE'
-                        },
-                        {
-                            label: 'FILM'
-                        },
-                    ]
-                },
-                {
-                    label: 'STRUCNA LITERATURA',
-                    children: [
-                        {
-                            label: 'DRUSTVENE NAUKE'
-                        },
-                        {
-                            label: 'EKONOMIJA'
-                        },
-                        {
-                            label: 'MATEMATIKA I TEHNICKE NAUKE'
-                        },
-                        {
-                            label: 'PRIRODNE NAUKE'
-                        },
-                        {
-                            label: 'POPULARNA NAUKA'
-                        },
-                    ]
-                },
-            ],
-        },
-        {
-            label: 'AKCIJE',
-        },
-        {
-            label: 'NOVA IZDANJA',
-            href: '#',
-        },
-        {
-            label: 'USKORO',
-            href: '#',
-        },
-        {
-            label: 'BOOKTOK HITOVI',
-            href: '#',
-        },
-    ];
 
     const linkColor = useColorModeValue('gray.600', 'gray.200');
     const linkHoverColor = useColorModeValue('gray.800', 'white');
@@ -158,7 +19,7 @@ export const DesktopNav = ({ loggedUser }: any) => {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpenBook, onOpen: onOpenBook, onClose: onCloseBook } = useDisclosure();
-
+    const navigate = useNavigate()
 
     return (
         <Stack direction={'row'} spacing={4} alignItems={'center'} justify={'space-between'} w={'100%'}>
@@ -210,13 +71,17 @@ export const DesktopNav = ({ loggedUser }: any) => {
             </Flex>
             {
                 loggedUser !== undefined && loggedUser.role == Roles.MANAGER &&
-                <>
+                <Flex gap={'15px'}>
+                    <Button gap={'10px'} onClick={() => { navigate('/comments/approvement') }}>
+                        <BiCommentCheck></BiCommentCheck>
+                        PREGLED KOMENTARA
+                    </Button>
                     <Button gap={'10px'} onClick={onOpen}>
                         <FiUserPlus></FiUserPlus>
                         REGISTRUJ PRODAVCA
                     </Button>
                     <RegisterSellerForm onOpen={onOpen} onClose={onClose} isOpen={isOpen}></RegisterSellerForm>
-                </>
+                </Flex>
 
             }
             {

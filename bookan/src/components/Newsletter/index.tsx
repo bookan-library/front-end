@@ -1,23 +1,50 @@
-import { Button, Flex, Input, Text, Image } from '@chakra-ui/react'
+import { Button, Flex, Input, Text, Image, useToast } from '@chakra-ui/react'
+import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useEffect, useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { BsFillSendFill } from 'react-icons/bs'
 import { Form } from 'react-router-dom'
+import { newsletterSchema } from '../../schemas/newsletterSchema'
 import { useApplicationStore } from '../../stores/store'
 import { ResponseStatus } from '../../stores/types'
+import { displayToast } from '../../utils/toast'
+
+interface Inputs {
+    email: string
+}
 
 export const Newsletter = () => {
     const subscribeToNewsletter = useApplicationStore(state => state.subscribeToNewsletter)
     const subscription = useApplicationStore(state => state.subscription)
-    const [email, setEmail] = useState<string>('')
+    const toast = useToast()
+    // const [email, setEmail] = useState<string>('')
 
-    const handleNewsletterSubscription = () => {
-        subscribeToNewsletter(email)
-        setEmail('')
+    // const handleNewsletterSubscription = () => {
+    //     subscribeToNewsletter(email)
+    //     // setEmail('')
+    // }
+
+    // useEffect(() => {
+    //     setEmail('')
+    // })
+
+    const { register, handleSubmit, formState: { errors } } = useForm<Inputs>(
+        {
+            resolver: yupResolver(newsletterSchema)
+        }
+    );
+
+    const onSubmit: SubmitHandler<Inputs> = data => {
+        // const newsletter = {
+        //     title: data.title,
+        //     content: data.content,
+        //     file: selectedFile
+        // }
+        subscribeToNewsletter(data.email)
+        if (subscription.status === ResponseStatus.Success) {
+            displayToast("Newsletter successfully sent!", toast, subscription.status)
+        }
     }
-
-    useEffect(() => {
-        setEmail('')
-    })
 
     return (
         <Flex
@@ -51,24 +78,21 @@ export const Newsletter = () => {
                             bg={'#fff'}
                             width={'350px'}
                             placeholder={'email@example.com'}
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            // value={email}
+                            {...register("email")}
+                        // onChange={(e) => setEmail(e.target.value)}
                         />
                         <Button
                             bg={'red'}
                             color={'#fff'}
                             gap={'10px'}
                             _hover={{ bg: '#000' }}
-                            onClick={handleNewsletterSubscription}
+                            onClick={handleSubmit(onSubmit)}
                         >
                             PRIJAVITE SE
                             <BsFillSendFill color='#fff' />
                         </Button>
                     </Flex>
-                    {subscription.status === ResponseStatus.Error &&
-                        <Text color={'red'} ml={'20px'}>
-                            Wrong email format!
-                        </Text>}
                 </Form>
             </Flex>
         </Flex>

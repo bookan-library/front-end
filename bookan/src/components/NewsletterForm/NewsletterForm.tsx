@@ -1,10 +1,12 @@
 import { Button, FormControl, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Text, Textarea, useToast } from '@chakra-ui/react'
 import React, { ChangeEvent, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { newsletterSchema } from '../../schemas/newsletterSchema'
 import { useApplicationStore } from '../../stores/store'
 import { ResponseStatus } from '../../stores/types'
 import { Newsletter } from '../../types/Newsletter'
 import { displayToast } from '../../utils/toast'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 interface Props {
     isOpen: boolean
@@ -23,7 +25,11 @@ export const NewsletterForm = ({ isOpen, onOpen, onClose }: Props) => {
     const sendNewsletterRes = useApplicationStore(state => state.sendNewsletterRes)
 
     const [selectedFile, setSelectedFile] = useState<File>();
-    const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
+    const { register, handleSubmit, formState: { errors } } = useForm<Inputs>(
+        {
+            resolver: yupResolver(newsletterSchema)
+        }
+    );
     const toast = useToast()
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {

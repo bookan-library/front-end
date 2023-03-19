@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { PendingComment } from '../../components/PendingComment/PendingComment'
 import { Comment } from '../../Model/Comment'
 import { useApplicationStore } from '../../stores/store'
@@ -14,7 +14,11 @@ export const CommentsView = () => {
     useEffect(() => {
         getPendingComments()
         console.log('com', pendingComments)
-    })
+    }, [])
+
+    useEffect(() => {
+        getPendingComments()
+    }, [pendingComments])
 
     const handleApprove = (id: number, flag: number) => {
         approveComment(id, flag)

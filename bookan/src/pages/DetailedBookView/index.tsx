@@ -114,7 +114,7 @@ export const DetailedBookView = () => {
                         fontSize={'24px'}
                         mt={'15px'}
                     >
-                        Cena: 100 RSD
+                        {book.price} RSD
                     </Text>
                     <Flex alignItems={'flex-end'} mt={'15px'} gap={'1em'}>
                         <Counter count={quantity} setCount={setQuantity} />

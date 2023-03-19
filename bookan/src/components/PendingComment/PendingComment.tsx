@@ -26,10 +26,10 @@ export const PendingComment = ({ comment, approveComment }: Props) => {
     }
 
     return (
-        <Flex direction={'column'} padding={'50px'}>
-            <Flex alignItems={'center'} gap={'30px'}>
-                <Flex direction={'column'} gap={'10px'} >
-                    <Flex justifyContent={'space-between'}>
+        <Flex direction={'column'} padding={'50px'} width={'100%'} justifyContent='space-between'>
+            <Flex alignItems={'center'} gap={'30px'} justifyContent='space-between' width={'100%%'}>
+                <Flex direction={'column'} gap={'10px'} justifyContent='space-between' width={'90%'}>
+                    <Flex justifyContent={'space-between'} width={'100%'}>
                         <Box>
                             <Text
                                 fontWeight={'600'}

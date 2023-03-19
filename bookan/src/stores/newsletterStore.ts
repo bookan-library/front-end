@@ -56,15 +56,6 @@ export const newsletterStoreSlice: StateCreator<AppState, [], [], NewsletterStor
             })
         )
         try {
-            if (email === '') {
-                set(
-                    produce((state: AppState) => {
-                        state.subscription.status = ResponseStatus.Error
-                        return state
-                    })
-                )
-                return
-            }
             const res = await axios.post(`${process.env.REACT_APP_URL}/newsletter/subscribe`,
                 {
                     SubscriberEmail: email

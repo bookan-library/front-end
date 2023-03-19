@@ -1,8 +1,10 @@
-import { Button, FormControl, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Text, Textarea } from '@chakra-ui/react'
+import { Button, FormControl, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Text, Textarea, useToast } from '@chakra-ui/react'
 import React, { ChangeEvent, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useApplicationStore } from '../../stores/store'
+import { ResponseStatus } from '../../stores/types'
 import { Newsletter } from '../../types/Newsletter'
+import { displayToast } from '../../utils/toast'
 
 interface Props {
     isOpen: boolean
@@ -22,6 +24,7 @@ export const NewsletterForm = ({ isOpen, onOpen, onClose }: Props) => {
 
     const [selectedFile, setSelectedFile] = useState<File>();
     const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
+    const toast = useToast()
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -36,8 +39,10 @@ export const NewsletterForm = ({ isOpen, onOpen, onClose }: Props) => {
             file: selectedFile
         }
         sendNewsletter(newsletter as unknown as Newsletter);
-        if (sendNewsletterRes.error === null)
+        if (sendNewsletterRes.status === ResponseStatus.Success) {
             onClose()
+            displayToast("Newsletter successfully sent!", toast, sendNewsletterRes.status)
+        }
     }
 
     return (

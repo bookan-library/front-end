@@ -68,6 +68,7 @@ export const DetailedBookView = () => {
             onOpenLogin()
             return
         }
+        console.log('quantity ', quantity)
         await addToCart(book.id, quantity)
         displayToast("Book successfully added to cart!", toast, addToCartRes.status)
     }

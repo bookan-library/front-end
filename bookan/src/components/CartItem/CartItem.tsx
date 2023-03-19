@@ -17,6 +17,11 @@ export const CartItemBox = ({ cartItem, calculateFinalPrice }: Props) => {
     const navigate = useNavigate()
     const [currentQuantity, setCurrentQuantity] = useState<number>(cartItem.quantity)
 
+    const handleCartRemoval = async (val: number) => {
+        await removeFromCart(cartItem.id)
+        await getUserCart()
+    }
+
     return (
         <Tr cursor={'pointer'}>
             <Td onClick={() => navigate(`/books/categories/${cartItem.book.category.name}/${cartItem.book.id}`)}>
@@ -39,7 +44,7 @@ export const CartItemBox = ({ cartItem, calculateFinalPrice }: Props) => {
                 <Text>{cartItem.book.price * currentQuantity} RSD</Text>
             </Td>
             <Td>
-                <Button onClick={() => { removeFromCart(cartItem.id); getUserCart() }}>IZBRISITE</Button>
+                <Button onClick={() => handleCartRemoval(cartItem.id)}>IZBRISITE</Button>
             </Td>
         </Tr>
     )

@@ -16,13 +16,9 @@ export const CommentsView = () => {
         console.log('com', pendingComments)
     }, [])
 
-    useEffect(() => {
-        getPendingComments()
-    }, [pendingComments])
-
-    const handleApprove = (id: number, flag: number) => {
-        approveComment(id, flag)
-        getPendingComments()
+    const handleApprove = async (id: number, flag: number) => {
+        await approveComment(id, flag)
+        await getPendingComments()
     }
 
     return (

@@ -16,15 +16,24 @@ export const CartView = () => {
 
     const [finalPrice, setFinalPrice] = useState<number>(0)
 
+    const init = async () => {
+        await getUserCart()
+    }
+
     useEffect(() => {
         getLoggedUser()
-        getUserCart()
-        calculateFinalPrice()
+        init()
+        console.log('cart ', cart)
     }, [])
+
+    useEffect(() => {
+        calculateFinalPrice()
+    }, [cart])
 
 
     const calculateFinalPrice = () => {
-        getUserCart()
+        // getUserCart()
+        console.log('calc ', cart)
         let finalPrice = 0
         cart.data.forEach((cartItem: CartItem) => {
             finalPrice += cartItem.book.price * cartItem.quantity

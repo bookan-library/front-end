@@ -15,7 +15,8 @@ import {
     IconButton,
     useBreakpointValue,
     Stack,
-    useDisclosure
+    useDisclosure,
+    Img
 } from '@chakra-ui/react'
 
 import { link } from 'fs'
@@ -36,7 +37,7 @@ export const NavMenu = () => {
 
     const { isOpen, onToggle } = useDisclosure();
     return (
-        <Flex>
+        <Flex direction={'column'}>
             <Flex
                 bg={useColorModeValue('white', 'gray.800')}
                 color={useColorModeValue('gray.600', 'white')}

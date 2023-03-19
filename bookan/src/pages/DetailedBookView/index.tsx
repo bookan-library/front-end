@@ -68,6 +68,7 @@ export const DetailedBookView = () => {
             onOpenLogin()
             return
         }
+        console.log('quantity ', quantity)
         await addToCart(book.id, quantity)
         displayToast("Book successfully added to cart!", toast, addToCartRes.status)
     }
@@ -114,7 +115,7 @@ export const DetailedBookView = () => {
                         fontSize={'24px'}
                         mt={'15px'}
                     >
-                        Cena: 100 RSD
+                        {book.price} RSD
                     </Text>
                     <Flex alignItems={'flex-end'} mt={'15px'} gap={'1em'}>
                         <Counter count={quantity} setCount={setQuantity} />
@@ -174,7 +175,6 @@ export const DetailedBookView = () => {
                     </TabPanels>
                 </Tabs>
             </Flex>
-            <Newsletter></Newsletter>
             <LoginForm isOpen={isOpenLogin} onOpen={onOpenLogin} onClose={onCloseLogin}></LoginForm>
         </Flex>
     )

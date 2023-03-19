@@ -10,6 +10,7 @@ import { RegisterSeller } from '../types/RegisterSeller'
 import { Author } from '../Model/Author'
 import { AddBook } from '../types/AddBook'
 import { Book } from '../Model/Book'
+import { Newsletter } from '../types/Newsletter'
 
 
 export type NewsletterStore = NewsletterStoreState & NewsletterStoreActions
@@ -20,12 +21,16 @@ type NewsletterSubscriptionResponse = {
     status: ResponseStatus
 }
 
+
+
 export type NewsletterStoreActions = {
     subscribeToNewsletter: (email: string) => void
+    sendNewsletter: (newsletter: Newsletter) => void
 }
 
 export type NewsletterStoreState = {
     subscription: NewsletterSubscriptionResponse
+    sendNewsletterRes: NewsletterSubscriptionResponse
 }
 
 const state: NewsletterStoreState = {
@@ -34,6 +39,11 @@ const state: NewsletterStoreState = {
         error: '',
         status: ResponseStatus.Loading
     },
+    sendNewsletterRes: {
+        data: [],
+        error: '',
+        status: ResponseStatus.Loading
+    }
 }
 
 export const newsletterStoreSlice: StateCreator<AppState, [], [], NewsletterStore> = (set, get) => ({
@@ -46,15 +56,6 @@ export const newsletterStoreSlice: StateCreator<AppState, [], [], NewsletterStor
             })
         )
         try {
-            if (email === '') {
-                set(
-                    produce((state: AppState) => {
-                        state.subscription.status = ResponseStatus.Error
-                        return state
-                    })
-                )
-                return
-            }
             const res = await axios.post(`${process.env.REACT_APP_URL}/newsletter/subscribe`,
                 {
                     SubscriberEmail: email
@@ -77,6 +78,45 @@ export const newsletterStoreSlice: StateCreator<AppState, [], [], NewsletterStor
             set(
                 produce((state: AppState) => {
                     state.subscription.status = ResponseStatus.Error
+                    return state
+                })
+            )
+        }
+    },
+    sendNewsletter: async (newsletter: Newsletter) => {
+        set(
+            produce((state: AppState) => {
+                state.sendNewsletterRes.status = ResponseStatus.Loading
+                return state
+            })
+        )
+        try {
+            const body = new FormData()
+            body.append('File', newsletter.file, 'filename.png')
+            body.append('Title', newsletter.title)
+            body.append('Content', newsletter.content)
+            body.append('CreatorId', get().loggedUser.data[0].id)
+            const res = await axios.post(`${process.env.REACT_APP_URL}/newsletter/send`,
+                body,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': 'Bearer ' + get().token
+                    }
+                })
+            set(
+                produce((state: AppState) => {
+                    state.sendNewsletterRes.data = res.data
+                    state.sendNewsletterRes.status = ResponseStatus.Success
+                    return state
+                })
+            )
+        }
+        catch (err) {
+            console.log(err)
+            set(
+                produce((state: AppState) => {
+                    state.sendNewsletterRes.status = ResponseStatus.Error
                     return state
                 })
             )

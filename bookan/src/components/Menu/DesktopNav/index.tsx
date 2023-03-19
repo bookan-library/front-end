@@ -5,11 +5,13 @@ import { FiUserPlus } from "react-icons/fi";
 import { BiBookAdd } from "react-icons/bi";
 import { ImHome } from 'react-icons/im'
 import { BiCommentCheck } from 'react-icons/bi'
+import { ImNewspaper } from 'react-icons/im'
 import { Roles } from '../../../types/Roles';
 import { RegisterSellerForm } from '../../Auth/RegisterSeller';
 import { AddBookForm } from '../../Book/AddBookForm';
 import { useNavigate } from 'react-router-dom';
 import { NAV_ITEMS } from './consts';
+import { NewsletterForm } from '../../NewsletterForm/NewsletterForm';
 
 export const DesktopNav = ({ loggedUser }: any) => {
 
@@ -18,7 +20,9 @@ export const DesktopNav = ({ loggedUser }: any) => {
     const popoverContentBgColor = useColorModeValue('white', 'gray.800');
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isOpenNewsletter, onOpen: onOpenNewsletter, onClose: onCloseNewsletter } = useDisclosure();
     const { isOpen: isOpenBook, onOpen: onOpenBook, onClose: onCloseBook } = useDisclosure();
+
     const navigate = useNavigate()
 
     return (
@@ -72,6 +76,10 @@ export const DesktopNav = ({ loggedUser }: any) => {
             {
                 loggedUser !== undefined && loggedUser.role == Roles.MANAGER &&
                 <Flex gap={'15px'}>
+                    <Button gap={'10px'} onClick={onOpenNewsletter}>
+                        <ImNewspaper></ImNewspaper>
+                        KREIRAJ NEWSLETTER
+                    </Button>
                     <Button gap={'10px'} onClick={() => { navigate('/comments/approvement') }}>
                         <BiCommentCheck></BiCommentCheck>
                         PREGLED KOMENTARA
@@ -81,6 +89,7 @@ export const DesktopNav = ({ loggedUser }: any) => {
                         REGISTRUJ PRODAVCA
                     </Button>
                     <RegisterSellerForm onOpen={onOpen} onClose={onClose} isOpen={isOpen}></RegisterSellerForm>
+                    <NewsletterForm isOpen={isOpenNewsletter} onOpen={onOpenNewsletter} onClose={onCloseNewsletter}></NewsletterForm>
                 </Flex>
 
             }

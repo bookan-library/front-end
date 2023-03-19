@@ -58,8 +58,6 @@ export const CartView = () => {
                     <Text fontWeight={'600'} color={'gray'} fontSize={'20px'}>UKUPNO {finalPrice} RSD</Text>
                 </Flex>
             </TableContainer >
-            <Newsletter></Newsletter>
         </Flex>
-
     )
 }

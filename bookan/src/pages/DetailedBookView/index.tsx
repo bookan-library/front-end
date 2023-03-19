@@ -174,7 +174,6 @@ export const DetailedBookView = () => {
                     </TabPanels>
                 </Tabs>
             </Flex>
-            <Newsletter></Newsletter>
             <LoginForm isOpen={isOpenLogin} onOpen={onOpenLogin} onClose={onCloseLogin}></LoginForm>
         </Flex>
     )

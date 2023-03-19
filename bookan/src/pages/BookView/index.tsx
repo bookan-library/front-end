@@ -104,7 +104,6 @@ export const BookView = () => {
             <Flex justifyContent={'center'} padding='20px 0'>
                 <Paginator totalCount={bookCount.data} currentPage={currentPage} pageSize={1} onPageChange={handlePageChange} siblingCount={2}></Paginator>
             </Flex>
-            <Newsletter></Newsletter>
         </>
 
 

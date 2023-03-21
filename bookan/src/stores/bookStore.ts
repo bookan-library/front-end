@@ -10,6 +10,8 @@ import { RegisterSeller } from '../types/RegisterSeller'
 import { Author } from '../Model/Author'
 import { AddBook } from '../types/AddBook'
 import { Book } from '../Model/Book'
+import { QueryParams } from '../types/QueryParams'
+import { useParams } from 'react-router-dom'
 
 
 export type BookStore = BookStoreState & BookStoreActions
@@ -27,11 +29,11 @@ type BookCountResponse = {
 }
 
 export type BookStoreActions = {
-    addBook: (book: AddBook) => void
-    getBooksByCategory: (category: string, pageNumber: number) => void
-    searchBooks: (search: string, pageNumber: number) => void
-    getBookCount: () => void
-    getBookById: (id: string) => void
+    addBook: (book: AddBook) => Promise<void>
+    getBooksByCategory: (category: string, pageNumber: number, params?: QueryParams) => Promise<void>
+    searchBooks: (search: string, pageNumber: number) => Promise<void>
+    getBookCount: (category: string, params?: QueryParams) => Promise<void>
+    getBookById: (id: string) => Promise<void>
 }
 
 export type BookStoreState = {
@@ -72,6 +74,8 @@ export const bookStoreSlice: StateCreator<AppState, [], [], BookStore> = (set, g
             body.append('File', book.file, 'filename.png')
             body.append('Description', book.description)
             body.append('Name', book.name)
+            body.append('PublishingYear', book.publishingYear.toString())
+            body.append('Price', book.price.toString())
             body.append('PageNumber', book.pageNumber.toString())
             body.append('AuthorId', book.authorId.toString())
             body.append('PublisherId', book.publisherId.toString())
@@ -103,7 +107,7 @@ export const bookStoreSlice: StateCreator<AppState, [], [], BookStore> = (set, g
             )
         }
     },
-    getBooksByCategory: async (category: string, pageNumber: number) => {
+    getBooksByCategory: async (category: string, pageNumber: number, params?: QueryParams) => {
         set(
             produce((state: AppState) => {
                 state.books.status = ResponseStatus.Loading
@@ -111,7 +115,10 @@ export const bookStoreSlice: StateCreator<AppState, [], [], BookStore> = (set, g
             })
         )
         try {
-            const res = await axios.get(`${process.env.REACT_APP_URL}/books/categories/${category}?pageNumber=${pageNumber}`,
+            console.log('publ ', params?.publishers)
+
+            const publishersQuery = params?.publishers?.map(pub => `Publishers=${pub}`).join('&')
+            const res = await axios.get(`${process.env.REACT_APP_URL}/books/categories/${category}?PageNumber=${pageNumber}&MinPrice=${params?.minPrice}&MaxPrice=${params?.maxPrice}&${publishersQuery}`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -167,7 +174,7 @@ export const bookStoreSlice: StateCreator<AppState, [], [], BookStore> = (set, g
             )
         }
     },
-    getBookCount: async () => {
+    getBookCount: async (category: string, params?: QueryParams) => {
         set(
             produce((state: AppState) => {
                 state.bookCount.status = ResponseStatus.Loading
@@ -175,7 +182,7 @@ export const bookStoreSlice: StateCreator<AppState, [], [], BookStore> = (set, g
             })
         )
         try {
-            const res = await axios.get(`${process.env.REACT_APP_URL}/books/count`,
+            const res = await axios.get(`${process.env.REACT_APP_URL}/books/${category}/count?MinPrice=${params?.minPrice}&MaxPrice=${params?.maxPrice}&Publishers=${params?.publishers}`,
                 {
                     headers: {
                         'Content-Type': 'application/json',

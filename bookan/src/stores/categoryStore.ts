@@ -20,7 +20,7 @@ type CategoryResponse = {
 }
 
 export type CategoryStoreActions = {
-    getCategories: () => void
+    getCategories: () => Promise<void>
 
 }
 

@@ -26,9 +26,7 @@ export const NewsletterForm = ({ isOpen, onOpen, onClose }: Props) => {
 
     const [selectedFile, setSelectedFile] = useState<File>();
     const { register, handleSubmit, formState: { errors } } = useForm<Inputs>(
-        {
-            resolver: yupResolver(newsletterSchema)
-        }
+
     );
     const toast = useToast()
 

@@ -1,7 +1,9 @@
-import { Button, Flex, FormControl, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Text } from "@chakra-ui/react"
+import { Button, Flex, FormControl, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Spinner, Text, useToast } from "@chakra-ui/react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { useApplicationStore } from "../../../stores/store"
+import { ResponseStatus } from "../../../stores/types"
 import { LoginCredentials } from "../../../types/LoginCredentials"
+import { displayToast } from "../../../utils/toast"
 
 interface Props {
     isOpen: boolean
@@ -17,13 +19,15 @@ type Inputs = {
 export const LoginForm = ({ isOpen, onOpen, onClose }: Props) => {
 
     const login = useApplicationStore(state => state.login)
-    const token = useApplicationStore(state => state.token)
+    const token = useApplicationStore(state => state.tokenResponse)
     const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
-    const onSubmit: SubmitHandler<Inputs> = data => {
-        login(data as unknown as LoginCredentials);
-        if (token === null) {
+    const toast = useToast()
+    const onSubmit: SubmitHandler<Inputs> = async data => {
+        await login(data as unknown as LoginCredentials);
+        if (token.status === ResponseStatus.Success) {
             onClose()
         }
+        displayToast("Successfully logged in!", toast, token.status)
     }
 
     return (
@@ -43,6 +47,7 @@ export const LoginForm = ({ isOpen, onOpen, onClose }: Props) => {
                 }
             >
                 <ModalCloseButton />
+                {token.status === ResponseStatus.Loading && <Spinner />}
                 <Text fontSize="2xl" marginBottom={'20px'}>Prijavite se!</Text>
                 <FormControl
                     css={

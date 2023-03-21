@@ -13,8 +13,13 @@ export const VerificationPage = () => {
     const id = searchParams.get('id');
     const navigate = useNavigate()
 
+    const handleVerification = async (id: string, code: string) => {
+        await verifyUser(id, code)
+    }
+
     useEffect(() => {
-        verifyUser(id, code)
+        handleVerification(id ?? '', code ?? '')
+        console.log(verifiedUser.status)
         if (verifiedUser.status === ResponseStatus.Success)
             navigate('/')
     }, [])

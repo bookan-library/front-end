@@ -19,9 +19,9 @@ export const PendingComment = ({ comment, approveComment }: Props) => {
     const approveCommentRes = useApplicationStore(state => state.approveCommentRes)
     const toast = useToast()
 
-    const handleApprovement = (commentId: number, flag: number) => {
+    const handleApprovement = async (commentId: number, flag: number) => {
         console.log('cid ', commentId)
-        approveComment(commentId, flag)
+        await approveComment(commentId, flag)
         displayToast("Succesful!", toast, approveCommentRes.status)
     }
 

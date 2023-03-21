@@ -13,6 +13,7 @@ interface Props {
     isOpen: boolean
     onOpen: () => void
     onClose: () => void
+    getPublishers: () => Promise<void>
 }
 
 type Inputs = {
@@ -27,13 +28,15 @@ type Inputs = {
 export const AddPublisherForm = ({ isOpen, onOpen, onClose }: Props) => {
 
     const addPublisher = useApplicationStore(state => state.addPublisher)
+    const getPublishers = useApplicationStore(state => state.getPublishers)
     const addPublisherRes = useApplicationStore(state => state.addPublisherRes)
     const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
-    const onSubmit: SubmitHandler<Inputs> = data => {
+    const onSubmit: SubmitHandler<Inputs> = async data => {
         addPublisher(data as unknown as AddPublisher)
         if (addPublisherRes.status === ResponseStatus.Success)
             onClose()
+        await getPublishers()
     }
 
     return (

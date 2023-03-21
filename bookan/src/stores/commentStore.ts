@@ -22,8 +22,8 @@ export type CommentResponse = {
 }
 
 export type CommentStoreActions = {
-    addComment: (comment: AddComment) => void
-    getCommentsForBook: (bookId: string) => void
+    addComment: (comment: AddComment) => Promise<void>
+    getCommentsForBook: (bookId: string) => Promise<void>
     getPendingComments: () => Promise<void>
     approveComment: (commentId: number, isApproved: number) => Promise<void>
 }

@@ -21,8 +21,8 @@ type PublisherResponse = {
 }
 
 export type PublisherStoreActions = {
-    getPublishers: () => void
-    addPublisher: (publisher: AddPublisher) => void
+    getPublishers: () => Promise<void>
+    addPublisher: (publisher: AddPublisher) => Promise<void>
 }
 
 export type PublisherStoreState = {

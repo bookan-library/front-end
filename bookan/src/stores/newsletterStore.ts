@@ -24,8 +24,8 @@ type NewsletterSubscriptionResponse = {
 
 
 export type NewsletterStoreActions = {
-    subscribeToNewsletter: (email: string) => void
-    sendNewsletter: (newsletter: Newsletter) => void
+    subscribeToNewsletter: (email: string) => Promise<void>
+    sendNewsletter: (newsletter: Newsletter) => Promise<void>
 }
 
 export type NewsletterStoreState = {

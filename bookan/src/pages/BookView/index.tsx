@@ -1,14 +1,17 @@
 import { SearchIcon } from '@chakra-ui/icons';
 import { Box, Button, Divider, Flex, Input, InputGroup, InputLeftElement, Text } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { BookCard } from '../../components/Book/BookCard';
+import { Filters } from '../../components/Filters/Filters';
 import { Newsletter } from '../../components/Newsletter';
 import { Paginator } from '../../components/Paginator';
 import { useApplicationStore } from '../../stores/store'
+import { QueryParams } from '../../types/QueryParams';
 
 export const BookView = () => {
     const params = useParams();
+    const [queryParams] = useSearchParams();
     const getBooksByCategory = useApplicationStore(state => state.getBooksByCategory)
     const books = useApplicationStore(state => state.books)
     const searchBooks = useApplicationStore(state => state.searchBooks)
@@ -16,25 +19,63 @@ export const BookView = () => {
     const bookCount = useApplicationStore(state => state.bookCount)
     const [search, setSearch] = useState<string>('')
     const [currentPage, setCurrentPage] = useState<number>(1)
-    const [display, setDisplay] = useState<boolean>(false)
+    const [sliderValue, setSliderValue] = useState([0, 5000])
+    const [selectedPublishers, setSelectedPublishers] = useState<string[]>([])
     const navigate = useNavigate()
+    const location = useLocation()
+
+    const parsePriceFromParams = () => {
+        const minPrice = parseInt(queryParams.get('minPrice') ?? '0')
+        const maxPrice = parseInt(queryParams.get('maxPrice') ?? '5000')
+        const publishers = queryParams.getAll('Publishers')
+        return { minPrice, maxPrice, publishers }
+    }
+
+    const init = () => {
+        const { minPrice, maxPrice, publishers } = parsePriceFromParams()
+        setSelectedPublishers(publishers)
+        setSliderValue([minPrice, maxPrice])
+    }
+
+    const loadBooks = async (page: number = 1) => {
+        const parameters = { minPrice: sliderValue[0], maxPrice: sliderValue[1], publishers: selectedPublishers }
+        await getBooksByCategory(params.category ?? '', page, parameters)
+        await getBookCount(params.category ?? '', parameters)
+    }
+
+    const updateUrlWithParams = () => {
+        const publishersQuery = selectedPublishers?.map(pub => `Publishers=${pub}`).join('&')
+        navigate(`${location.pathname}?minPrice=${sliderValue[0]}&maxPrice=${sliderValue[1]}&${publishersQuery}`)
+    }
+
+    const handlePublisherDeselected = (publisher: string) => {
+        const newPublishers = selectedPublishers.filter(p => p != publisher)
+        setSelectedPublishers(newPublishers)
+    }
+
+    const handlePublisherSelected = (publisher: string) => {
+        setSelectedPublishers([...selectedPublishers, publisher])
+    }
+
+    const handlePageChanged = async (page: number) => {
+        if (page <= 0) return
+        const parameters = { minPrice: sliderValue[0], maxPrice: sliderValue[1], publishers: selectedPublishers }
+        await getBooksByCategory(params.category ?? '', page, parameters)
+        setCurrentPage(page)
+    }
 
     useEffect(() => {
-        getBooksByCategory(params.category ?? '', currentPage)
-        getBookCount()
+        init()
     }, [])
 
     useEffect(() => {
-        getBooksByCategory(params.category ?? '', currentPage)
-    }, [currentPage])
+        updateUrlWithParams()
+        loadBooks()
+    }, [sliderValue, selectedPublishers])
 
     useEffect(() => {
         searchBooks(search, 1)
     }, [search])
-
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page)
-    }
 
     return (
         <>
@@ -54,23 +95,18 @@ export const BookView = () => {
                 mt={'2.5em'}
                 gap={'15px'}
             >
-                {
-                    books?.data.map(book =>
-                        <BookCard book={book} category={params.category ?? ''} setDisplay={setDisplay}>
-                            <Box
-                                width={'100%'}
-                                height={'100%'}
-                                bg={'rgba(0, 0, 0, .2)'}
-                                display={display ? 'flex' : 'none'}
-                                flexDirection={'column'}
-                                alignItems={'center'}
-                                justifyContent={'center'}
-                                gap={'1.5em'}
-                                position={'absolute'}
-                                top={'0'}
-                                left={'0'}
-                                zIndex={'100'}
-                            >
+                <Filters
+                    sliderValue={sliderValue}
+                    sliderValueChanged={(val) => setSliderValue(val)}
+                    publisherDeselected={handlePublisherDeselected}
+                    publisherSelected={handlePublisherSelected}
+                    selectedPublishers={selectedPublishers}
+                />
+                <Flex>
+                    {
+                        books?.data.map(book =>
+                            <BookCard key={book.id} book={book} category={params.category ?? ''}>
+
                                 <Button
                                     bg={'#000'}
                                     color={'#fff'}
@@ -96,13 +132,14 @@ export const BookView = () => {
                                 >
                                     BRZI PREGLED
                                 </Button>
-                            </Box>
-                        </BookCard>
-                    )
-                }
+
+                            </BookCard>
+                        )
+                    }
+                </Flex>
             </Flex>
             <Flex justifyContent={'center'} padding='20px 0'>
-                <Paginator totalCount={bookCount.data} currentPage={currentPage} pageSize={1} onPageChange={handlePageChange} siblingCount={2}></Paginator>
+                <Paginator totalCount={bookCount.data} currentPage={currentPage} pageSize={10} onPageChange={handlePageChanged} siblingCount={2}></Paginator>
             </Flex>
         </>
 

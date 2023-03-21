@@ -1,4 +1,4 @@
-import { Button, Flex, FormControl, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Select, Text, useDisclosure } from '@chakra-ui/react'
+import { Button, Flex, FormControl, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Select, Text, useDisclosure, useToast } from '@chakra-ui/react'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useApplicationStore } from '../../../stores/store';
@@ -7,6 +7,8 @@ import { MdLibraryAdd } from 'react-icons/md'
 import { AddBook } from '../../../types/AddBook';
 import { AddAuthorForm } from '../AddAuthorForm';
 import { AddPublisherForm } from '../AddPublisherForm';
+import { ResponseStatus } from '../../../stores/types';
+import { displayToast } from '../../../utils/toast';
 
 interface Props {
     isOpen: boolean
@@ -23,6 +25,7 @@ type Inputs = {
     categoryId: string
     authorId: string
     publisherId: string
+    price: number
 }
 
 export const AddBookForm = ({ isOpen, onOpen, onClose }: Props) => {
@@ -36,6 +39,7 @@ export const AddBookForm = ({ isOpen, onOpen, onClose }: Props) => {
     const addBook = useApplicationStore(state => state.addBook)
     const addBookRes = useApplicationStore(state => state.addBookRes)
     const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
+    const toast = useToast()
 
     const onSubmit: SubmitHandler<Inputs> = data => {
         const book = {
@@ -46,21 +50,27 @@ export const AddBookForm = ({ isOpen, onOpen, onClose }: Props) => {
             file: selectedFile,
             categoryId: data.categoryId,
             authorId: data.authorId,
-            publisherId: data.publisherId
+            publisherId: data.publisherId,
+            price: data.price
         }
         addBook(book as unknown as AddBook);
-        if (addBookRes.error === null)
+        if (addBookRes.status === ResponseStatus.Success) {
             onClose()
+        }
+        displayToast("Successfully added book!", toast, addBookRes.status)
     }
     const [selectedFile, setSelectedFile] = useState<File>();
     const { isOpen: isOpenPublisher, onOpen: onOpenPublisher, onClose: onClosePublisher } = useDisclosure();
     const { isOpen: isOpenAuthor, onOpen: onOpenAuthor, onClose: onCloseAuthor } = useDisclosure();
 
+    const init = async () => {
+        getAuthors()
+        await getPublishers()
+        getCategories()
+    }
 
     useEffect(() => {
-        getAuthors()
-        getPublishers()
-        getCategories()
+        init()
     }, [])
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -96,12 +106,14 @@ export const AddBookForm = ({ isOpen, onOpen, onClose }: Props) => {
                     }>
                         <Input type='text' width={'75%'} placeholder='Naziv' {...register("name", { required: true })} />
                         <Input type='text' width={'75%'} placeholder='Opis' {...register("description", { required: true })} />
-                        <Input type='text' width={'75%'} placeholder='Broj strana' {...register("pageNumber", { required: true })} />                    <Input type='text' width={'75%'} placeholder='Godina objavljivanja' {...register("publishingYear", { required: true })} />
+                        <Input type='text' width={'75%'} placeholder='Broj strana' {...register("pageNumber", { required: true })} />
+                        <Input type='text' width={'75%'} placeholder='Godina objavljivanja' {...register("publishingYear", { required: true })} />
+                        <Input type='number' width={'75%'} placeholder='Cena' {...register("price", { required: true })} />
                         <Flex width={'75%'} gap={'5%'}>
                             <Select placeholder='Select author' {...register("authorId", { required: true })}>
                                 {
                                     authors.data.map(author =>
-                                        <option value={author.id}>
+                                        <option value={author.id} key={author.id}>
                                             {author.firstName + ' ' + author.lastName}
                                         </option>
                                     )
@@ -139,8 +151,8 @@ export const AddBookForm = ({ isOpen, onOpen, onClose }: Props) => {
                     <Button width={'75%'} backgroundColor={'#000'} color='#fff' marginTop={'20px'} _hover={{ backgroundColor: '#ff6600' }} onClick={handleSubmit(onSubmit)}>Dodaj knjigu</Button>
                 </ModalContent>
             </Modal >
-            <AddAuthorForm isOpen={isOpenAuthor} onClose={onCloseAuthor} onOpen={onOpenAuthor} />
-            <AddPublisherForm isOpen={isOpenPublisher} onClose={onClosePublisher} onOpen={onOpenPublisher} />
+            <AddAuthorForm isOpen={isOpenAuthor} onClose={onCloseAuthor} onOpen={onOpenAuthor} getAuthors={getAuthors} />
+            <AddPublisherForm isOpen={isOpenPublisher} onClose={onClosePublisher} onOpen={onOpenPublisher} getPublishers={getPublishers} />
         </>
 
     )

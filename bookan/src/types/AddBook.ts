@@ -7,4 +7,5 @@ export type AddBook = {
     publisherId: number
     categoryId: number
     file: File
+    price: number
 }

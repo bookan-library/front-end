@@ -20,8 +20,8 @@ type AuthorResponse = {
 }
 
 export type AuthorStoreActions = {
-    getAuthors: () => void
-    addAuthor: (author: AddAuthor) => void
+    getAuthors: () => Promise<void>
+    addAuthor: (author: AddAuthor) => Promise<void>
 }
 
 export type AuthorStoreState = {

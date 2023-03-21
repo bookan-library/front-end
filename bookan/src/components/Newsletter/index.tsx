@@ -42,7 +42,7 @@ export const Newsletter = () => {
         // }
         subscribeToNewsletter(data.email)
         if (subscription.status === ResponseStatus.Success) {
-            displayToast("Newsletter successfully sent!", toast, subscription.status)
+            displayToast("Successfully subscribed to newsletter!", toast, subscription.status)
         }
     }
 

@@ -1,8 +1,9 @@
-import { Button, Flex, FormControl, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Text } from '@chakra-ui/react'
+import { Button, Flex, FormControl, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Text, useToast } from '@chakra-ui/react'
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useApplicationStore } from '../../../stores/store'
 import { RegisterSeller } from '../../../types/RegisterSeller'
+import { displayToast } from '../../../utils/toast'
 
 interface Props {
     isOpen: boolean
@@ -30,10 +31,12 @@ export const RegisterSellerForm = ({ isOpen, onOpen, onClose }: Props) => {
     const registerSeller = useApplicationStore(state => state.registerSeller)
     const registerSellerDetails = useApplicationStore(state => state.registerSellerDetails)
     const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
-    const onSubmit: SubmitHandler<Inputs> = data => {
-        registerSeller(data as unknown as RegisterSeller);
+    const toast = useToast()
+    const onSubmit: SubmitHandler<Inputs> = async data => {
+        await registerSeller(data as unknown as RegisterSeller);
         if (registerSellerDetails.error === null)
             onClose()
+        displayToast("Seller successfully registered!", toast, registerSellerDetails.status)
     }
 
     return (

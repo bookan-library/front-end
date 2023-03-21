@@ -22,7 +22,7 @@ export const CommentsView = () => {
     }
 
     return (
-        <Flex>
+        <Flex direction={'column'}>
             {
                 pendingComments && pendingComments.data.map((pendingComment: Comment) =>
                     <PendingComment comment={pendingComment} approveComment={(id: number, flag: number) => handleApprove(id, flag)}></PendingComment>

@@ -12,16 +12,16 @@ import { RegisterSeller } from '../types/RegisterSeller'
 export type AuthStore = AuthStoreState & AuthStoreActions
 
 export type AuthStoreActions = {
-    login: (LoginCredentials: LoginCredentials) => void
+    login: (LoginCredentials: LoginCredentials) => Promise<void>
     logout: () => void
-    registerBuyer: (buyer: RegisterBuyer) => void
-    getLoggedUser: () => void
-    verifyUser: (id: string | null, code: string | null) => void
+    registerBuyer: (buyer: RegisterBuyer) => Promise<void>
+    getLoggedUser: () => Promise<void>
+    verifyUser: (id: string | null, code: string | null) => Promise<void>
     verifiedUser: ApiResponse
     loggedUser: ApiResponse
     registerBuyerDetails: ApiResponse
     tokenResponse: ApiResponse
-    registerSeller: (seller: RegisterSeller) => void
+    registerSeller: (seller: RegisterSeller) => Promise<void>
     registerSellerDetails: ApiResponse
 }
 

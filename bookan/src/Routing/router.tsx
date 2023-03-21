@@ -22,7 +22,7 @@ import { WishlistView } from "../pages/WishlistView";
 export const routes: RouteObject[] = [
     {
         path: '/',
-        element: <><App /></>,
+        element: <VerificationWrapper><App /></VerificationWrapper>,
         children: [
             {
                 path: `/books/categories/:category`,

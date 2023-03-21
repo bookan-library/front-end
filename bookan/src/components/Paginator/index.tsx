@@ -37,7 +37,7 @@ export const Paginator = ({ totalCount, currentPage, pageSize, onPageChange, sib
     let firstPage
     if (paginationRange) {
         lastPage = paginationRange[paginationRange.length - 1];
-        firstPage = paginationRange[0];
+        firstPage = paginationRange[0]
     }
     return (
         <List
@@ -61,7 +61,7 @@ export const Paginator = ({ totalCount, currentPage, pageSize, onPageChange, sib
 
                     // If the pageItem is a DOT, render the DOTS unicode character
                     if (pageNumber === '.') {
-                        return <li className="pagination-item dots">&#8230;</li>;
+                        return <li key={pageNumber} className="pagination-item dots">&#8230;</li>;
                     }
 
                     // Render our Page Pills
@@ -77,6 +77,7 @@ export const Paginator = ({ totalCount, currentPage, pageSize, onPageChange, sib
                             margin={'0 10px'}
                             borderRadius={'50%'}
                             cursor={'pointer'}
+                            key={pageNumber}
                             _hover={{
                                 bg: '#ebedf0'
                             }

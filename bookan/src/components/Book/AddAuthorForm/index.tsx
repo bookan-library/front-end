@@ -12,6 +12,7 @@ interface Props {
     isOpen: boolean
     onOpen: () => void
     onClose: () => void
+    getAuthors: () => Promise<void>
 }
 
 type Inputs = {
@@ -20,16 +21,17 @@ type Inputs = {
     description: string
 }
 
-export const AddAuthorForm = ({ isOpen, onOpen, onClose }: Props) => {
+export const AddAuthorForm = ({ isOpen, onOpen, onClose, getAuthors }: Props) => {
 
     const addAuthor = useApplicationStore(state => state.addAuthor)
     const addAuthorRes = useApplicationStore(state => state.addAuthorRes)
     const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
-    const onSubmit: SubmitHandler<Inputs> = data => {
-        addAuthor(data as unknown as AddAuthor)
+    const onSubmit: SubmitHandler<Inputs> = async data => {
+        await addAuthor(data as unknown as AddAuthor)
         if (addAuthorRes.status === ResponseStatus.Success)
             onClose()
+        await getAuthors()
     }
 
     return (

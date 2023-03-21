@@ -72,22 +72,9 @@ export const WishlistView = () => {
             <Flex width={'70%'} padding={'10px'}>
                 {
                     wishlist?.data.map((wish: any) =>
-                        <BookCard book={wish.book} category={wish.book.category.name ?? ''} setDisplay={setDisplay}>
-                            <Box
-                                width={'100%'}
-                                height={'100%'}
-                                bg={'rgba(0, 0, 0, .2)'}
-                                display={display ? 'flex' : 'none'}
-                                flexDirection={'column'}
-                                alignItems={'center'}
-                                justifyContent={'center'}
-                                gap={'1.5em'}
-                                position={'absolute'}
-                                top={'0'}
-                                left={'0'}
-                                zIndex={'100'}
-                            >
-                                {/* <Button
+                        <BookCard book={wish.book} category={wish.book.category.name ?? ''}>
+
+                            {/* <Button
                                     bg={'#000'}
                                     color={'#fff'}
                                     width={'130px'}
@@ -100,10 +87,9 @@ export const WishlistView = () => {
                                 >
                                     DETALJNIJE
                                 </Button> */}
-                                <Button onClick={() => handleRemoveFromWishlist(wish.book.id)}>
-                                    <AiOutlineClose color='#000' fontSize={'20px'}></AiOutlineClose>
-                                </Button>
-                            </Box>
+                            <Button onClick={() => handleRemoveFromWishlist(wish.book.id)}>
+                                <AiOutlineClose color='#000' fontSize={'20px'}></AiOutlineClose>
+                            </Button>
                         </BookCard>
                     )
                 }

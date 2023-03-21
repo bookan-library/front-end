@@ -7,12 +7,11 @@ interface Props {
     book: Book
     category: string
     children: any
-    setDisplay: (val: boolean) => void
 }
 
-export const BookCard = ({ book, category, children, setDisplay }: Props) => {
+export const BookCard = ({ book, category, children }: Props) => {
 
-
+    const [display, setDisplay] = useState<boolean>(false)
 
     return (
         <Box
@@ -45,11 +44,26 @@ export const BookCard = ({ book, category, children, setDisplay }: Props) => {
                     pt={'.5em'}
                 >
                     <Text>{book.name}</Text>
-                    <Text>{book.author.firstName}</Text>
-                    <Text>100 RSD</Text>
+                    <Text>{book.author.firstName} {book.author.lastName}</Text>
+                    <Text color='red'>{book.price} RSD</Text>
                 </Flex>
             </Flex>
-            {children}
+            <Box
+                width={'100%'}
+                height={'100%'}
+                bg={'rgba(0, 0, 0, .2)'}
+                display={display ? 'flex' : 'none'}
+                flexDirection={'column'}
+                alignItems={'center'}
+                justifyContent={'center'}
+                gap={'1.5em'}
+                position={'absolute'}
+                top={'0'}
+                left={'0'}
+                zIndex={'100'}
+            >
+                {children}
+            </Box>
             {/* <Box
                 width={'100%'}
                 height={'100%'}

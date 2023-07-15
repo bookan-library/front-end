@@ -7,6 +7,7 @@ import { CartView } from "../pages/CartView";
 import { CommentsView } from "../pages/CommentsView";
 import { DetailedBookView } from "../pages/DetailedBookView";
 import { WishlistView } from "../pages/WishlistView";
+import { HomePage } from "../pages/HomeView";
 
 // const URLS = {
 //     ROOT: '/',
@@ -18,36 +19,43 @@ import { WishlistView } from "../pages/WishlistView";
 //     CALLBACK_AUTH: '/api/auth/:authtype/redirect'
 // };
 
-
 export const routes: RouteObject[] = [
-    {
-        path: '/',
-        element: <VerificationWrapper><App /></VerificationWrapper>,
-        children: [
-            {
-                path: `/books/categories/:category`,
-                element: <BookView></BookView>
-            },
-            {
-                path: `/books/categories/:category/:id`,
-                element: <DetailedBookView></DetailedBookView>
-            },
-            {
-                path: `/user/favorite`,
-                element: <WishlistView></WishlistView>
-            },
-            {
-                path: '/user/cart',
-                element: <CartView></CartView>
-            },
-            {
-                path: '/comments/approvement',
-                element: <CommentsView></CommentsView>
-            }
-        ]
-    },
-    {
-        path: '/verify',
-        element: <VerificationPage></VerificationPage>
-    }
-]
+  {
+    path: "/",
+    element: (
+      <VerificationWrapper>
+        <App />
+      </VerificationWrapper>
+    ),
+    children: [
+      {
+        path: "/",
+        element: <HomePage></HomePage>,
+      },
+      {
+        path: `/books/categories/:category`,
+        element: <BookView></BookView>,
+      },
+      {
+        path: `/books/categories/:category/:id`,
+        element: <DetailedBookView></DetailedBookView>,
+      },
+      {
+        path: `/user/favorite`,
+        element: <WishlistView></WishlistView>,
+      },
+      {
+        path: "/user/cart",
+        element: <CartView></CartView>,
+      },
+      {
+        path: "/comments/approvement",
+        element: <CommentsView></CommentsView>,
+      },
+    ],
+  },
+  {
+    path: "/verify",
+    element: <VerificationPage></VerificationPage>,
+  },
+];
